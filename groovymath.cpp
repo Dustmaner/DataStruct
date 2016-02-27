@@ -422,6 +422,43 @@ struct node* deleteWholeZero(struct node* head)
 	return head;
 }
 
+struct node* deleteDecimalZero(struct node* head)
+{
+	
+
+	node* temp = head;
+	node* curr = temp;
+	while (curr->next != NULL)
+	{
+		temp = curr->next;
+		curr = temp;
+
+	}
+	if (curr->prev == NULL && curr->next == NULL)
+	{
+		return head;
+	}
+	while (curr->data == 0)
+	{
+		temp = curr;
+		curr = curr->prev;
+
+		delete temp;
+		
+	}
+	curr->next = 0;
+
+	while (curr->prev != NULL)
+	{
+		curr = curr->prev;
+		head = curr;
+
+	}
+	/*return curr;
+	temp = NULL;*/
+
+	return head;
+}
 
 struct node* exponential(node* first, node** decimal, node* power)
 {
@@ -590,12 +627,16 @@ int main(int argc, char* argv[])
 			{
 				isfirstoperation = true;
 				first = deleteWholeZero(first);//Delete leading zeroes
+				if (isswap == false)//Checks if NOT swap
 				printList(first);// Print first item
-				if (firstfloat != NULL)// checks if first float number exists
+				if (firstfloat != NULL && isswap == false)// checks if first float number exists
 				cout << ".";// puts a "." in the output
 				//firstfloat = deleteDecimalZero(firstfloat);//Delete trailing zeroes
+				if (isswap == false)//Checks if NOT swap
 				printList(firstfloat);// prints first float number
+				if (isswap == false)//Checks if NOT swap
 				cout << operation;// display operation symbol
+				if(second != NULL)
 				second = deleteWholeZero(second);//Delete leading zeroes
 				printList(second);// Print the Second item
 				if (secondfloat != NULL && operation != '#')//check if second float number
@@ -604,6 +645,7 @@ int main(int argc, char* argv[])
 				}
 				//secondfloat = deleteDecimalZero(secondfloat);//Delete trailing zeroes
 				printList(secondfloat);//prints second float number
+				if (isswap == false)//Checks if NOT swap
 				cout << "=";//Display answer
 				if (operation == '+')// Check for Addition
 				{
@@ -698,10 +740,16 @@ int main(int argc, char* argv[])
 				{
 					//code for swap
 					cout << "swap(";
+					
+					
 					printList(first);
+					
 					cout << ".";
 					printList(firstfloat);
 					cout << ")=";
+					firstfloat = deleteWholeZero(firstfloat);
+					first = deleteWholeZero(first);
+					first = deleteDecimalZero(first);
 					printList(firstfloat);
 					cout << ".";
 					printList(first);
@@ -756,7 +804,7 @@ int main(int argc, char* argv[])
 				instream.get(currentchar);
 			}
 			//get numbers for swap
-			operation = NULL;
+			operation = 00;
 			isswap = true;
 
 			
