@@ -430,7 +430,7 @@ struct node* exponential(node* first, node** decimal, node* power)
 	int exponent = 0;
 	string expoS;
 	//int last_digit, reversedNum = 0;
-	for (int i = 0; power->data != NULL || power->data == 0; i++)
+	for (int i = 0; power->data != 0 || power->data == 0; i++)
 	{
 		if (power->next != NULL)
 		exponent += (power->data * pow(10,i));
@@ -679,6 +679,10 @@ int main(int argc, char* argv[])
 					{
 						cout << ".";
 						printList(firstfloat);
+					}
+					else
+					{
+						cout << ".0";
 					}
 
 					cout << "\n";// Print the decimal point and a 0
