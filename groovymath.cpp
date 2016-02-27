@@ -9,6 +9,7 @@
 using namespace std;
 
 int globalcarry = 0;
+bool expgreat = false;
 
 struct node// original node
 {
@@ -421,48 +422,15 @@ struct node* deleteWholeZero(struct node* head)
 	return head;
 }
 
-struct node* deleteDecimalZero(struct node* head)
-{
-	/*if (head == NULL)
-	{
-		head = newNode(0);
-		return head;
-	}
-		
-	node*temp = head;
-	// traverse the list up to the last node 
-	while (temp->next != NULL) {
 
-		temp = temp->next;
-	}
-	while (temp->data == 0)
-	{
-		node* cur = temp->prev;
-		delete temp;
-		temp = cur;
-	}*/
-	node* temp = head;
-	if (temp != NULL)
-	while (temp->next != NULL)
-	{
-		temp = temp->next;
-	}
-	if (temp != NULL)
-	while (temp->data == 0)
-	{
-		node* cur = temp->prev;
-		temp = NULL;
-		temp = cur;
-	}
-	return temp;
-}
-
-struct node* exponential(node* first, node* second, node* power)
+struct node* exponential(node* first, node** decimal, node* power)
 {
 	int size = getSize(first);
+	int sized = getSize(*decimal);
 	int exponent = 0;
+	string expoS;
 	//int last_digit, reversedNum = 0;
-	for (int i = 0; power->data != NULL; i++)
+	for (int i = 0; power->data != NULL || power->data == 0; i++)
 	{
 		if (power->next != NULL)
 		exponent += (power->data * pow(10,i));
@@ -473,101 +441,56 @@ struct node* exponential(node* first, node* second, node* power)
 		}
 		power = power->next;
 	}
-	first = merge(first, second);
+	
+	node* res = first;
+	if (exponent < sized)
+	{
+		//cout << "tuturu\t" ;
+		int decimaldistance = sized - exponent;
+		node* curr = (*decimal);// curr will carry the numbers extracted from the old decimal
+		for (int i = 0; i < exponent; i++)
+		{
+			 
+			InsertAtTail(&first, curr->data);
+			curr = curr->next;
+		}
+		for (int i = 0; i < exponent; i++)
+		{
+			//Delete  "exponent" nodes from decimal
+
+			node* temp = (*decimal)->next;// temp will carry the new decimal number
+			delete (*decimal);
+			(*decimal) = temp;
+
+
+		}
+		return first;
+	}
+
+	first = merge(first, *decimal);
 	
 	//insert code for deleting leading zeroes
 
 	exponent = ReverseInt(exponent);
-	if (exponent > size)
+	if (exponent > sized)
 	{
-		for (size; size < exponent -1 ; size++)
+		expgreat = true;
+		for (sized; sized < exponent  ; sized++)
 		{
 			InsertAtTail(&first, 0);
 			/*printList(first);
 				cout << endl;*/
 		}
 	}
+
+	if (exponent == sized)
+	{
+		expgreat = true;
+	}
+	
 	return first;
 }
 
-
-/*
-void multiplyLists(struct node* first, struct node* second, node** result)
-{
-	node *temp = first;
-	node *tailfirst = first;
-	node *temp2 = second;
-	node *temp3 = NULL;
-	int carry = 0;
-
-	// first list is empty
-	if (first == NULL)
-	{
-		*result = second;
-		return;
-	}
-
-	// second list is empty
-	else if (first == NULL)
-	{
-		*result = second;
-		return;
-	}
-
-	int size1 = getSize(first);
-	int size2 = getSize(second);
-
-	// traverse the list up to the last node 
-	while (temp->next != NULL) {
-
-		temp = temp->next;
-		tailfirst = tailfirst->next;
-	}
-
-	// traverse the list up to the last node 
-	while (temp2->next != NULL) {
-
-		temp2 = temp2->next;
-	}
-
-	while (temp2 != NULL)
-	{
-		while (temp != NULL)
-		{
-			int i = temp2->data * temp->data;
-			if (i >= 10)//checks if there is a carry
-			{
-				carry = i/10;
-				//i = i % 10;
-			}
-			push(&temp3, i);
-			//if (carry > 0)
-			//{
-			//	push(&temp3, carry);
-			//}
-			temp = temp->prev;
-
-		}
-		temp = tailfirst;
-		temp2 = temp2->prev;
-	}
-	
-
-	*result = temp3;
-
-}
-*/
-
-/*void printList(node* list)
-{
-	node* temp = list;
-	while (temp != NULL)
-	{
-		cout << temp->data << "";
-		temp = temp->next;
-	}
-	//cout << endl;
-}*/
 
 
 
@@ -670,7 +593,7 @@ int main(int argc, char* argv[])
 				printList(first);// Print first item
 				if (firstfloat != NULL)// checks if first float number exists
 				cout << ".";// puts a "." in the output
-				firstfloat = deleteDecimalZero(firstfloat);//Delete trailing zeroes
+				//firstfloat = deleteDecimalZero(firstfloat);//Delete trailing zeroes
 				printList(firstfloat);// prints first float number
 				cout << operation;// display operation symbol
 				second = deleteWholeZero(second);//Delete leading zeroes
@@ -679,7 +602,7 @@ int main(int argc, char* argv[])
 				{
 					cout << ".";// puts a "." in the output
 				}
-				secondfloat = deleteDecimalZero(secondfloat);//Delete trailing zeroes
+				//secondfloat = deleteDecimalZero(secondfloat);//Delete trailing zeroes
 				printList(secondfloat);//prints second float number
 				cout << "=";//Display answer
 				if (operation == '+')// Check for Addition
@@ -748,10 +671,15 @@ int main(int argc, char* argv[])
 				}
 				if (operation == '#')// Check for pound
 				{
-					first = exponential(first, firstfloat, second);
+					first = exponential(first, &firstfloat, second);
 					res = first;
 					// Print the result
 					printList(res);
+					if (expgreat == false)
+					{
+						cout << ".";
+						printList(firstfloat);
+					}
 
 					cout << "\n";// Print the decimal point and a 0
 					deleteList(&first);// Set all listsststst to NULL
@@ -759,6 +687,8 @@ int main(int argc, char* argv[])
 					deleteList(&second);
 					deleteList(&secondfloat);
 					isfloat = false;
+					operation = '0';
+					expgreat = false;
 				}
 				if (isswap == true)
 				{
