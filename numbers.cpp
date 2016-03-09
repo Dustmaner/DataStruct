@@ -65,6 +65,7 @@ void addatendC(struct nodeColumn *start, double num)
 		p = p->next;
 	}
 	p->next = temp;
+	temp->prev = p;
 	temp->next = NULL;
 }
 
@@ -103,7 +104,7 @@ int main(int argc, char* argv[])
 	ifstream opstream(s);// Obtain Operation Stream
 
 	nodeColumn *headC = new nodeColumn;
-	//node *head = newNode(0);
+	node *head = newNode(0);
 	headC->data = 0;
 	headC->next = NULL;
 	//head->data = 0;
