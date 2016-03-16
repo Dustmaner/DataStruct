@@ -46,7 +46,7 @@ struct node *newNode(double data)// add new node with int data input
 
 void addatend(struct node *start, double num)
 {
-	if (start->data == NULL && 0 == start->word.compare(""))
+	if (start->data == -1337 && 0 == start->word.compare(""))
 	{
 		start->data = num;
 		start->next = NULL;
@@ -78,7 +78,7 @@ void addatendW(struct node *start, string num)
 	struct node *temp, *p;
 	//temp = (struct node *)malloc(sizeof(struct node));
 	temp = new node;
-	temp->data = NULL;
+	temp->data = -1337;
 	temp->word = num;
 	p = start;
 	while (p->next != NULL)
@@ -128,7 +128,7 @@ void printList(node* list)
 	node* temp = list;
 	while (temp != NULL)
 	{
-		if (temp->data != NULL)
+		if (temp->data != -1337)
 		{
 			cout << temp->data << "";
 		}
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
 	node *head = new node;
 	headC->data = -420;
 	//headC->next = NULL;
-	head->data = NULL;
+	head->data = -1337;
 	//head->word = "\0";
 
 
@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
 			temporalC = temporalC->next;
 		}
 		temporalC->firstelement = head;
-		head = newNode(NULL);
+		head = newNode(-1337);
 
 	}
 
