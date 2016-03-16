@@ -7,11 +7,22 @@
 #include <math.h>
 #include <sstream>
 #include <algorithm>
+#include <cctype>
+#include <stdlib.h>
 
 using namespace std;
 
+bool isFloat(string myString) {
+	std::istringstream iss(myString);
+	float f;
+	iss >> noskipws >> f; // noskipws considers leading whitespace invalid
+	// Check the entire string was consumed and if either failbit or badbit is set
+	return iss.eof() && !iss.fail();
+}
+
 struct node{
 	double data;
+	string word;
 	node *next;
 	node *prev;
 };
@@ -27,6 +38,7 @@ struct node *newNode(double data)// add new node with int data input
 {
 	struct node *temp = new node;
 	temp->data = data;
+	temp->word = "";
 	temp->next = NULL;
 	temp->prev = NULL;
 	return temp;
@@ -34,13 +46,40 @@ struct node *newNode(double data)// add new node with int data input
 
 void addatend(struct node *start, double num)
 {
-	if (start == NULL)
+	if (start->data == NULL && 0 == start->word.compare(""))
 	{
+		start->data = num;
+		start->next = NULL;
+		start->prev = NULL;
 		return;
 	}
 	struct node *temp, *p;
-	temp = (struct node *)malloc(sizeof(struct node));
+	//temp = (struct node *)malloc(sizeof(struct node));
+	temp = newNode(num);
 	temp->data = num;
+	p = start;
+	while (p->next != NULL)
+	{
+		p = p->next;
+	}
+	p->next = temp;
+	temp->next = NULL;
+}
+
+void addatendW(struct node *start, string num)
+{
+	if (0 == start->word.compare(""))
+	{
+		start->word = num;
+		start->next = NULL;
+		start->prev = NULL;
+		return;
+	}
+	struct node *temp, *p;
+	//temp = (struct node *)malloc(sizeof(struct node));
+	temp = new node;
+	temp->data = NULL;
+	temp->word = num;
 	p = start;
 	while (p->next != NULL)
 	{
@@ -52,8 +91,14 @@ void addatend(struct node *start, double num)
 
 void addatendC(struct nodeColumn *start, double num)
 {
-	if (start == NULL)
+	if (start->data == -420)
 	{
+		start->data = 1;
+		start->next = NULL;
+		start->prev = NULL;
+		start->firstelement = NULL;
+		node *first = newNode(0);
+		start->firstelement = first;
 		return;
 	}
 	struct nodeColumn *temp, *p;
@@ -67,12 +112,35 @@ void addatendC(struct nodeColumn *start, double num)
 	p->next = temp;
 	temp->prev = p;
 	temp->next = NULL;
+	/*temp->firstelement = NULL;
+	node *first = newNode(0);
+	temp->firstelement = first;*/
 }
 
 bool is_number(const std::string& s)
 {
 	return !s.empty() && std::find_if(s.begin(),
 		s.end(), [](char c) { return !isdigit(c); }) == s.end();
+}
+
+void printList(node* list)
+{
+	node* temp = list;
+	while (temp != NULL)
+	{
+		if (temp->data != NULL)
+		{
+			cout << temp->data << "";
+		}
+		if (temp->word.compare("") == 1)
+		{
+			cout << temp->word << "";
+		}
+		cout << "\t";
+		temp = temp->next;
+	}
+	//if (temp != NULL && temp->data != NULL)
+	cout << endl;
 }
 
 int main(int argc, char* argv[])
@@ -104,10 +172,12 @@ int main(int argc, char* argv[])
 	ifstream opstream(s);// Obtain Operation Stream
 
 	nodeColumn *headC = new nodeColumn;
-	node *head = newNode(0);
-	headC->data = 0;
-	headC->next = NULL;
-	//head->data = 0;
+	nodeColumn *temporalC = new nodeColumn;
+	node *head = new node;
+	headC->data = -420;
+	//headC->next = NULL;
+	head->data = NULL;
+	//head->word = "\0";
 
 
 	string line;
@@ -117,29 +187,45 @@ int main(int argc, char* argv[])
 	bool isdelete = 0;
 	bool isinsert = 0;
 
-	int lines = 0;
+	int lines = 0;// determines the line number
 
-	while (!instream.eof()){// loop for each line
+	while (!instream.eof()){// loop for each line data file
 		lines++;
 
 		getline(instream, line, '\n');
 
 		addatendC(headC, lines);// Add new node for Row manager
-		
+
+		//head = newNode(-1337);
+		//head->data = -1337;
 
 		istringstream some(line);
 		while (!some.eof()){// loop for each element
 			getline(some, element, '\t');
-			if (is_number(element))
+			if (isFloat((element)))
 			{
+				//cout << "number " << element << "\tLine "<<lines << endl;
+				addatend(head, stod(element));
 				//add element to horizontal node list
 			}
-			/*cout << "Stuff: " << element << endl;*/
+			else
+			{
+				//cout << "word " << element << "\t\tLine " << lines << endl;
+				addatendW(head, element);
+			}
 		}
+		printList(head);
+		temporalC = headC;
+		for (int i = 0; i < lines-1; i++)
+		{
+			temporalC = temporalC->next;
+		}
+		temporalC->firstelement = head;
+		head = newNode(NULL);
 
 	}
 
-	while (!opstream.eof()){// loop for each line
+	while (!opstream.eof()){// loop for each line operation file
 
 
 		getline(opstream, line, '\n');// get a complete line
