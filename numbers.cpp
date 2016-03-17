@@ -46,6 +46,13 @@ struct node *newNode(double data)// add new node with int data input
 
 void addatend(struct node *start, double num)
 {
+	if (start == NULL)
+	{
+		start = new node;
+		start->data = num;
+		start->next = NULL;
+		start->prev = NULL;
+	}
 	if (start->data == -1337 && 0 == start->word.compare(""))
 	{
 		start->data = num;
@@ -316,8 +323,17 @@ void maxList(nodeColumn** head_ref, int line)
 
 		}
 		templine = (*head_ref)->firstelement;
+		if (templine == NULL)
+		{
+			(*head_ref)->firstelement = newNode(-1337);
+			addatendW((*head_ref)->firstelement, "undefined");
+			//cout << "wowpls" << endl;
+			return;
+		}
+			
 		if (count == -1337)
 		{
+
 			addatendW(templine, "undefined");
 			return;
 		}
@@ -522,12 +538,28 @@ int main(int argc, char* argv[])
 				getline(some, element, ':');// store the Math Operation
 				if (element.compare("count")==0)// If Math operation is Count
 				{
+					
 					countList(&headC, linenumber);
+
+					if (headC->firstelement == NULL)
+					{
+						headC->firstelement = newNode(-1337);
+						lines = 1;
+						//break;
+					}
 					//cout << "count Line: " << linenumber << endl;
 				}
 				else if (element.compare("max")==0)// If Math operation is Max
 				{
+					if (headC->firstelement == NULL)
+					{
+						//headC->firstelement = newNode(0);
+						//headC->firstelement->word = "undefined";
+						lines = 1;
+						//break;
+					}
 					maxList(&headC, linenumber);
+					
 					//cout << "max Line: " << linenumber << endl;
 				}
 				else if (element.compare("min")==0)// If Math operation is Min
