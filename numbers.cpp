@@ -332,6 +332,53 @@ void minList(nodeColumn** head_ref, int line)
 	}
 }
 
+void meanList(nodeColumn** head_ref, int line)
+{
+	struct nodeColumn* temp;
+	temp = (*head_ref);
+	if (line == 1)
+	{
+
+		int num = (*head_ref)->data;
+		double count = -1;
+		//cout << "MIN THIS " << num << endl;
+		node* templine = (*head_ref)->firstelement;
+		//if (templine->data > -1)
+		count = 0;
+		int passable = 0;
+		int counts = 0;
+
+		while (templine != NULL)
+		{
+			if (templine->data != -1337)
+			{
+				count += templine->data;
+				passable = 1;
+				counts++;
+			}
+			if (templine->data == -1337 && templine->next != NULL)
+			{
+				//count = templine->next->data;
+				//passable = 0;
+			}
+			templine = templine->next;
+		}
+		templine = (*head_ref)->firstelement;
+		if (passable == 0)
+		{
+			addatendW(templine, "undefined");
+			return;
+		}
+		addatend(templine, ((int)count/counts));
+		cout << "";
+	}
+
+	else
+	{
+		meanList((&temp->next), line - 1);
+	}
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -448,7 +495,7 @@ int main(int argc, char* argv[])
 				}
 				else // If Math operation is Mean
 				{
-
+					meanList(&headC, linenumber);
 					//cout << "mean Line: "<<linenumber << endl;
 				}
 
