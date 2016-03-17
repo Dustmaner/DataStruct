@@ -54,7 +54,7 @@ void addatend(struct node *start, double num)
 		return;
 	}
 	struct node *temp, *p;
-	//temp = (struct node *)malloc(sizeof(struct node));
+	
 	temp = newNode(num);
 	temp->data = num;
 	p = start;
@@ -64,6 +64,7 @@ void addatend(struct node *start, double num)
 	}
 	p->next = temp;
 	temp->next = NULL;
+	temp->prev = p;
 }
 
 void addatendW(struct node *start, string num)
@@ -132,15 +133,203 @@ void printList(node* list)
 		{
 			cout << temp->data << "";
 		}
-		if (temp->word.compare("") == 1)
+		/*if (temp->word.compare("") == 0)
 		{
 			cout << temp->word << "";
 		}
+		if (temp->word.compare("") == 1)
+		{
+			cout << temp->word << "";
+		}*/
+		cout << temp->word;
 		cout << "\t";
 		temp = temp->next;
 	}
 	//if (temp != NULL && temp->data != NULL)
 	cout << endl;
+}
+
+void printAll(nodeColumn* list)
+{
+	nodeColumn* temp = list;
+	while (temp != NULL)
+	{
+		printList(temp->firstelement);
+		temp = temp->next;
+	}
+}
+
+void deleteList(struct nodeColumn **head_ref, int line)
+{
+	struct nodeColumn* temp;
+	temp = (*head_ref);
+	if (line == 1)
+	{
+		int num = (*head_ref)->data;
+		(*head_ref)->firstelement = NULL;
+		(*head_ref)->next->prev = (*head_ref)->prev;
+		(*head_ref)->prev->next = (*head_ref)->next;
+		(*head_ref)->data = num;
+		temp = (*head_ref);
+		while ((temp->next != NULL)) {
+		temp->next->data = ++num;
+		temp = temp->next;
+		
+		}
+		cout << "";
+	}
+	
+	else
+	{
+		deleteList((&temp->next), line - 1);
+	}
+	/*while ((*head_ref != NULL)) {
+		temp = (*head_ref)->next;
+		(*head_ref) = NULL;
+		(*head_ref) = temp;
+	}*/
+}
+
+void insertList(struct nodeColumn **head_ref, int line)
+{
+	struct nodeColumn* temp;
+	temp = (*head_ref);
+	if (line == 1)
+	{
+		int num = (*head_ref)->data;
+		//int num = 69;
+		temp = new nodeColumn;// create an empty new line
+		temp->data = num;// set new line to the new position
+		temp->firstelement = newNode(-1337);//empty list
+		temp->next = (*head_ref);// new line points next to it predecessor
+		temp->prev = (*head_ref)->prev;// new line points back to the line previous
+		(*head_ref)->prev->next = temp;
+		(*head_ref)->next->prev = (*head_ref);
+		temp = (*head_ref);
+		while ((temp->next != NULL)) {
+			temp->next->data = ++num;
+			temp = temp->next;
+		}
+		//cout << "INSERT THIS " << num<<endl;
+		cout << "";
+	}
+
+	else
+	{
+		insertList((&temp->next), line - 1);
+	}
+}
+
+void countList(nodeColumn** head_ref, int line)
+{
+	struct nodeColumn* temp;
+	temp = (*head_ref);
+	if (line == 1)
+	{
+		double count = 0;
+		int num = (*head_ref)->data;
+		//cout << "COUNT THIS " << num << endl;
+		node* templine = (*head_ref)->firstelement;
+		while (templine != NULL)
+		{
+			if (templine->data > -1)
+			{
+				count++;
+			}
+			templine = templine->next;
+
+		}
+		templine = (*head_ref)->firstelement;
+		addatend(templine, count);
+		cout << "";
+	}
+
+	else
+	{
+		countList((&temp->next), line - 1);
+	}
+}
+
+void maxList(nodeColumn** head_ref, int line)
+{
+	struct nodeColumn* temp;
+	temp = (*head_ref);
+	if (line == 1)
+	{
+		double count = -1337;
+		int num = (*head_ref)->data;
+		//cout << "MAX THIS " << num << endl;
+		node* templine = (*head_ref)->firstelement;
+		while (templine != NULL)
+		{
+			if (templine->data > count)
+			{
+				count = templine->data;
+			}
+			/*if (templine->data == -1337 && templine->next != NULL)
+			{
+				count = templine->next->data;
+			}*/
+			templine = templine->next;
+
+		}
+		templine = (*head_ref)->firstelement;
+		if (count == -1337)
+		{
+			addatendW(templine, "undefined");
+			return;
+		}
+		addatend(templine, (int)count);
+		cout << "";
+	}
+
+	else
+	{
+		maxList((&temp->next), line - 1);
+	}
+}
+
+void minList(nodeColumn** head_ref, int line)
+{
+	struct nodeColumn* temp;
+	temp = (*head_ref);
+	if (line == 1)
+	{
+		
+		int num = (*head_ref)->data;
+		double count = -1;
+		//cout << "MIN THIS " << num << endl;
+		node* templine = (*head_ref)->firstelement;
+		//if (templine->data > -1)
+		count = templine->data;
+		
+
+		while (templine != NULL)
+		{
+			if (templine->data < count && templine->data != -1337)
+			{
+				count = templine->data;
+			}
+			if (templine->data == -1337 && templine->next != NULL)
+			{
+				count = templine->next->data;
+			}
+			templine = templine->next;
+		}	
+		templine = (*head_ref)->firstelement;
+		if (count == -1337)
+		{
+			addatendW(templine, "undefined");
+			return;
+		}
+		addatend(templine, (int)count);
+		cout << "";
+	}
+
+	else
+	{
+		minList((&temp->next), line - 1);
+	}
 }
 
 int main(int argc, char* argv[])
@@ -214,7 +403,7 @@ int main(int argc, char* argv[])
 				addatendW(head, element);
 			}
 		}
-		printList(head);
+		//printList(head);
 		temporalC = headC;
 		for (int i = 0; i < lines-1; i++)
 		{
@@ -244,17 +433,17 @@ int main(int argc, char* argv[])
 				getline(some, element, ':');// store the Math Operation
 				if (element.compare("count")==0)// If Math operation is Count
 				{
-					
+					countList(&headC, linenumber);
 					//cout << "count Line: " << linenumber << endl;
 				}
 				else if (element.compare("max")==0)// If Math operation is Max
 				{
-					
+					maxList(&headC, linenumber);
 					//cout << "max Line: " << linenumber << endl;
 				}
 				else if (element.compare("min")==0)// If Math operation is Min
 				{
-					
+					minList(&headC, linenumber);
 					//cout << "min Line: " << linenumber << endl;
 				}
 				else // If Math operation is Mean
@@ -269,27 +458,29 @@ int main(int argc, char* argv[])
 			}
 
 			//If we detected DeleteLine we store for the number of the line
-			if (isdelete)//check if operation is "deleteline"
+			if (isdelete && stoi(element)<=lines)//check if operation is "deleteline"
 			{
 				int linenumber = stoi(element);// store the line number
 
 				//cout << "Delete Line : " << linenumber << endl;
 
-				//do stuff
-
+				deleteList(&headC, linenumber);
+				lines--;
 				isdelete = 0;//end
 			}
 
 			//If we detected InsertLine we store for the number of the line
-			if (isinsert)//check if operation is "insertline"
+			if (isinsert && stoi(element)<=lines)//check if operation is "insertline"
 			{
 				int linenumber = stoi(element);// store the line number
 
 				//cout << "Insert Line : " << linenumber << endl;
 
-				//do stuff
+				insertList(&headC, linenumber);
 
-				isdelete = 0;
+				//do stuff
+				lines++;
+				isinsert = 0;
 			}
 
 			//We have 3 operations
@@ -324,6 +515,8 @@ int main(int argc, char* argv[])
 	//cout << "Operations: " << s << endl;
 
 	//cout << "Number of lines: "<<lines << endl;
+	//cout << "\n\n\n";
+	printAll(headC);
 
 	system("pause");
 	return 0;
