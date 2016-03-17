@@ -161,20 +161,58 @@ void printAll(nodeColumn* list)
 
 void deleteList(struct nodeColumn **head_ref, int line)
 {
+	if (line == 0)
+	{
+		return;
+	}
 	struct nodeColumn* temp;
 	temp = (*head_ref);
 	if (line == 1)
 	{
 		int num = (*head_ref)->data;
+		if (temp->prev == NULL && temp->next == NULL)
+		{
+			(*head_ref)->firstelement = NULL;
+			return;
+		}
+		if (temp->prev == NULL)
+		{
+			//(*head_ref)->firstelement = NULL;
+			//(*head_ref)->next->prev = (*head_ref);
+			//(*head_ref)
+			temp->next->prev = NULL;
+			temp = temp->next;
+			while (((*head_ref)->next != NULL) && temp->next !=NULL)
+			{
+				temp->data = temp->data - 1;
+				temp = temp->next;
+				
+			}
+			temp->data = temp->data - 1;
+			while (temp->prev != NULL)
+			{
+				temp = temp->prev;
+			}
+			(*head_ref) = temp;
+			return;
+		}
+		if (temp->next == NULL)
+		{
+			temp = temp->prev;
+			temp->next = NULL;
+			//(*head_ref) = NULL;
+			(head_ref) = &temp;
+			return;
+		}
 		(*head_ref)->firstelement = NULL;
 		(*head_ref)->next->prev = (*head_ref)->prev;
 		(*head_ref)->prev->next = (*head_ref)->next;
 		(*head_ref)->data = num;
 		temp = (*head_ref);
-		while ((temp->next != NULL)) {
-		temp->next->data = ++num;
-		temp = temp->next;
-		
+		while ((temp->next != NULL))
+		{
+			temp->next->data = ++num;
+			temp = temp->next;
 		}
 		cout << "";
 	}
@@ -192,6 +230,10 @@ void deleteList(struct nodeColumn **head_ref, int line)
 
 void insertList(struct nodeColumn **head_ref, int line)
 {
+	if (line == 0)
+	{
+		return;
+	}
 	struct nodeColumn* temp;
 	temp = (*head_ref);
 	if (line == 1)
@@ -510,7 +552,7 @@ int main(int argc, char* argv[])
 				int linenumber = stoi(element);// store the line number
 
 				//cout << "Delete Line : " << linenumber << endl;
-
+				if (stoi(element) <= lines)
 				deleteList(&headC, linenumber);
 				lines--;
 				isdelete = 0;//end
