@@ -243,6 +243,42 @@ void insertList(struct nodeColumn **head_ref, int line)
 	}
 	struct nodeColumn* temp;
 	temp = (*head_ref);
+	if (temp->prev == NULL && temp->next == NULL && temp->firstelement == NULL)
+	{
+		(*head_ref)->firstelement = newNode(-1337);
+		return;
+	}
+	if (temp->prev == NULL && temp->next == NULL)
+	{
+		nodeColumn* tempo = new nodeColumn;
+		tempo->data = 1;
+		tempo->firstelement = newNode(-1337);
+		tempo->next = (*head_ref);
+		tempo->prev = NULL;
+		(*head_ref)->data = 2;
+		(*head_ref)->prev = tempo;
+		(*head_ref) = (*head_ref)->prev;
+		return;
+	}
+	if (temp->prev == NULL && temp->next != NULL)
+	{
+		nodeColumn* tempo = new nodeColumn;
+		tempo->data = 1;
+		tempo->firstelement = newNode(-1337);
+		tempo->next = (*head_ref);
+		tempo->prev = NULL;
+		//(*head_ref)->data = 2;
+		(*head_ref)->prev = tempo;
+		(*head_ref) = (*head_ref)->prev;
+		temp = (*head_ref)->next;
+		while (temp != NULL)
+		{
+			
+			temp->data += 1;
+			temp = temp->next;
+		}
+		return;
+	}
 	if (line == 1)
 	{
 		int num = (*head_ref)->data;
@@ -289,6 +325,12 @@ void countList(nodeColumn** head_ref, int line)
 
 		}
 		templine = (*head_ref)->firstelement;
+		if (templine == NULL)
+		{
+			templine = newNode(0);
+			(*head_ref)->firstelement = templine;
+			return;
+		}
 		addatend(templine, count);
 		cout << "";
 	}
@@ -359,6 +401,12 @@ void minList(nodeColumn** head_ref, int line)
 		//cout << "MIN THIS " << num << endl;
 		node* templine = (*head_ref)->firstelement;
 		//if (templine->data > -1)
+		if (templine == NULL)
+		{
+			(*head_ref)->firstelement = newNode(-1337);
+			addatendW((*head_ref)->firstelement, "undefined");
+			return;
+		}
 		count = templine->data;
 		
 
@@ -375,6 +423,7 @@ void minList(nodeColumn** head_ref, int line)
 			templine = templine->next;
 		}	
 		templine = (*head_ref)->firstelement;
+		
 		if (count == -1337)
 		{
 			addatendW(templine, "undefined");
@@ -422,6 +471,12 @@ void meanList(nodeColumn** head_ref, int line)
 			templine = templine->next;
 		}
 		templine = (*head_ref)->firstelement;
+		if (templine == NULL)
+		{
+			(*head_ref)->firstelement = newNode(-1337);
+			addatendW((*head_ref)->firstelement, "undefined");
+			return;
+		}
 		if (passable == 0)
 		{
 			addatendW(templine, "undefined");
@@ -538,7 +593,10 @@ int main(int argc, char* argv[])
 				getline(some, element, ':');// store the Math Operation
 				if (element.compare("count")==0)// If Math operation is Count
 				{
-					
+					if (headC->firstelement == NULL)
+					{
+						lines = 1;
+					}
 					countList(&headC, linenumber);
 
 					if (headC->firstelement == NULL)
@@ -564,11 +622,19 @@ int main(int argc, char* argv[])
 				}
 				else if (element.compare("min")==0)// If Math operation is Min
 				{
+					if (headC->firstelement == NULL)
+					{
+						lines = 1;
+					}
 					minList(&headC, linenumber);
 					//cout << "min Line: " << linenumber << endl;
 				}
 				else // If Math operation is Mean
 				{
+					if (headC->firstelement == NULL)
+					{
+						lines = 1;
+					}
 					meanList(&headC, linenumber);
 					//cout << "mean Line: "<<linenumber << endl;
 				}
@@ -591,8 +657,12 @@ int main(int argc, char* argv[])
 			}
 
 			//If we detected InsertLine we store for the number of the line
-			if (isinsert && stoi(element)<=lines)//check if operation is "insertline"
+			if (isinsert && stoi(element)<=lines+1|| headC->firstelement == NULL && isinsert)//check if operation is "insertline"
 			{
+				/*if (headC->firstelement == NULL)
+				{
+					lines = 1;
+				}*/
 				int linenumber = stoi(element);// store the line number
 
 				//cout << "Insert Line : " << linenumber << endl;
