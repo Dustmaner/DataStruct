@@ -243,12 +243,12 @@ void insertList(struct nodeColumn **head_ref, int line)
 	}
 	struct nodeColumn* temp;
 	temp = (*head_ref);
-	if (temp->prev == NULL && temp->next == NULL && temp->firstelement == NULL)
+	if (temp->prev == NULL && temp->next == NULL && temp->firstelement == NULL)//no line
 	{
 		(*head_ref)->firstelement = newNode(-1337);
 		return;
 	}
-	if (temp->prev == NULL && temp->next == NULL)
+	if (temp->prev == NULL && temp->next == NULL)// only line
 	{
 		nodeColumn* tempo = new nodeColumn;
 		tempo->data = 1;
@@ -260,7 +260,7 @@ void insertList(struct nodeColumn **head_ref, int line)
 		(*head_ref) = (*head_ref)->prev;
 		return;
 	}
-	if (temp->prev == NULL && temp->next != NULL)
+	if (temp->prev == NULL && temp->next != NULL && line == 1)// first line
 	{
 		nodeColumn* tempo = new nodeColumn;
 		tempo->data = 1;
