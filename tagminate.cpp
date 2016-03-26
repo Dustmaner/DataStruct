@@ -13,6 +13,55 @@
 
 using namespace std;
 
+class stacke
+{
+	char stk[8000], top;
+	public:
+		stacke()
+		{
+			top = -1;
+		}
+
+		void push(char x)
+		{
+			if (top > 500)
+			{
+				//cout << "The stack is full"<<endl;
+				return;
+			}
+			stk[++top] = x;
+			//cout << "Successfully inserted: " << x<<endl;
+		}
+		void pop()
+		{
+			if (top < 0)
+			{
+				//cout << "The stack is empty" << endl;
+				return;
+			}
+			//cout << "the deleted element is: " << stk[top--]<<endl;
+		}
+
+		void display()
+		{
+			if (top < 0)
+			{
+				//cout << "The stack is empty" << endl;
+			}
+
+			for (int i = top; i >= 0; i--)
+			{
+				cout << stk[i] << " \n";
+			}
+		}
+
+		void tope()
+		{
+			cout << stk[top];
+			return;
+		}
+};
+
 struct node {
 	char data;
 	node *next;
@@ -75,11 +124,15 @@ void printList(node* list)
 
 int main(int argc, char* argv[])
 {
+	int ch;
+	stacke st;
+
+
 	stack<char> myStack;
 	//Set input
-	//std::string filename = "abc.html";
+	std::string filename = "abc.html";
 	int linecount = 1;
-	string filename = argv[1];
+	//string filename = argv[1];
 	/*filename.erase(0, 6);
 
 	std::string s = filename;
@@ -134,6 +187,7 @@ int main(int argc, char* argv[])
 
 			if (element == "<")
 			{
+				st.push('<');
 				myStack.push('<');
 			}
 			if (element == ">")
@@ -141,6 +195,7 @@ int main(int argc, char* argv[])
 				if (myStack.size() != 0 && myStack.top() == '<')
 				{
 					//cout << "pop <" << endl;
+					st.pop();
 					myStack.pop();
 				}
 				else
@@ -148,11 +203,12 @@ int main(int argc, char* argv[])
 					cout << "Error in line " << linecount << ", top of stack=";
 					if (myStack.size() != 0)
 					{
-						cout << myStack.top();
+						st.tope();
+						//cout << myStack.top();
 					}
 
 					cout << " current=" << ">" << endl;
-					//system("pause");
+					system("pause");
 					return 0;
 				}
 				//myStack.push('>');
@@ -160,6 +216,7 @@ int main(int argc, char* argv[])
 
 			if (element == "{")
 			{
+				st.push('{');
 				myStack.push('{');
 			}
 			if (element == "}")
@@ -167,6 +224,7 @@ int main(int argc, char* argv[])
 				if (myStack.size() != 0 && myStack.top() == '{')
 				{
 					//cout << "pop <" << endl;
+					st.pop();
 					myStack.pop();
 				}
 				else
@@ -174,11 +232,12 @@ int main(int argc, char* argv[])
 					cout << "Error in line " << linecount << ", top of stack=";
 					if (myStack.size() != 0)
 					{
-						cout << myStack.top();
+						st.tope();
+						//cout << myStack.top();
 					}
 
 					cout << " current=" << "}" << endl;
-					//system("pause");
+					system("pause");
 					return 0;
 				}
 				//myStack.push('>');
@@ -186,6 +245,7 @@ int main(int argc, char* argv[])
 
 			if (element == "(")
 			{
+				st.push('(');
 				myStack.push('(');
 			}
 			if (element == ")")
@@ -193,6 +253,7 @@ int main(int argc, char* argv[])
 				if (myStack.size() != 0 && myStack.top() == '(')
 				{
 					//cout << "pop <" << endl;
+					st.pop();
 					myStack.pop();
 				}
 				else
@@ -200,11 +261,12 @@ int main(int argc, char* argv[])
 					cout << "Error in line " << linecount << ", top of stack=";
 					if (myStack.size() != 0)
 					{
-						cout << myStack.top();
+						st.tope();
+						//cout << myStack.top();
 					}
 
 					cout << " current=" << ")" << endl;
-					//system("pause");
+					system("pause");
 					return 0;
 				}
 				//myStack.push('>');
@@ -212,6 +274,7 @@ int main(int argc, char* argv[])
 
 			if (element == "[")
 			{
+				st.push('[');
 				myStack.push('[');
 			}
 			if (element == "]")
@@ -219,6 +282,7 @@ int main(int argc, char* argv[])
 				if (myStack.size() != 0 && myStack.top() == '[')
 				{
 					//cout << "pop [" << endl;
+					st.pop();
 					myStack.pop();
 				}
 				else
@@ -226,11 +290,12 @@ int main(int argc, char* argv[])
 					cout << "Error in line " << linecount << ", top of stack=";
 					if (myStack.size() != 0)
 					{
-						cout << myStack.top();
+						st.tope();
+						//cout << myStack.top();
 					}
 					
 					cout << " current=" << "]" << endl;
-					//system("pause");
+					system("pause");
 					return 0;
 				}
 				//myStack.push(']');
@@ -243,10 +308,12 @@ int main(int argc, char* argv[])
 				if (myStack.size() != 0 && myStack.top() == '"')
 				{
 					//cout << "pop <" << endl;
+					st.pop();
 					myStack.pop();
 				}
 				else
 				{
+					st.push('"');
 					myStack.push('"');
 				}
 
@@ -258,10 +325,12 @@ int main(int argc, char* argv[])
 				if (myStack.size() != 0 && myStack.top() == '\'')
 				{
 					//cout << "pop <" << endl;
+					st.pop();
 					myStack.pop();
 				}
 				else
 				{
+					st.push('\'');
 					myStack.push('\'');
 				}
 
@@ -289,18 +358,19 @@ int main(int argc, char* argv[])
 		cout << "Error in line " << linecount << ", top of stack=";
 		if (myStack.size() != 0)
 		{
-			cout << myStack.top();
+			st.tope();
+			//cout << myStack.top();
 		}
 
 		cout << " current=" << "$" << endl;
-		//system("pause");
+		system("pause");
 		return 0;
 	}
 
 	cout << "ok" << endl;
 	
 
-
-	//system("pause");
+	//st.display();
+	system("pause");
 	return 0;
 }
