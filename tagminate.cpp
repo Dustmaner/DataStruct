@@ -24,7 +24,7 @@ class stacke
 
 		void push(char x)
 		{
-			if (top > 500)
+			if (top > 8000)
 			{
 				//cout << "The stack is full"<<endl;
 				return;
@@ -39,7 +39,7 @@ class stacke
 				//cout << "The stack is empty" << endl;
 				return;
 			}
-			//cout << "the deleted element is: " << stk[top--]<<endl;
+			/*cout << "the deleted element is: " <<*/ stk[top--]/*<<endl*/;
 		}
 
 		void display()
@@ -208,7 +208,7 @@ int main(int argc, char* argv[])
 					}
 
 					cout << " current=" << ">" << endl;
-					system("pause");
+					//system("pause");
 					return 0;
 				}
 				//myStack.push('>');
@@ -237,7 +237,7 @@ int main(int argc, char* argv[])
 					}
 
 					cout << " current=" << "}" << endl;
-					system("pause");
+					//system("pause");
 					return 0;
 				}
 				//myStack.push('>');
@@ -266,7 +266,7 @@ int main(int argc, char* argv[])
 					}
 
 					cout << " current=" << ")" << endl;
-					system("pause");
+					//system("pause");
 					return 0;
 				}
 				//myStack.push('>');
@@ -295,7 +295,7 @@ int main(int argc, char* argv[])
 					}
 					
 					cout << " current=" << "]" << endl;
-					system("pause");
+					//system("pause");
 					return 0;
 				}
 				//myStack.push(']');
@@ -363,7 +363,7 @@ int main(int argc, char* argv[])
 		}
 
 		cout << " current=" << "$" << endl;
-		system("pause");
+		//system("pause");
 		return 0;
 	}
 
@@ -371,6 +371,6 @@ int main(int argc, char* argv[])
 	
 
 	//st.display();
-	system("pause");
+	//system("pause");
 	return 0;
 }
