@@ -109,29 +109,47 @@ void cqueue::display()
 			for (i = front; i <= MAX - 1; i++)//print right side
 			{
 				cout << linenumber++ << "\t" <<a[i].name <<"\t"<< a[i].arrival << "\t" << a[i].duration;
+				relax++;
 			}
 			for (i = 0; i <= rear; i++)//print first part
 			{
 				cout << linenumber++ << "\t" << a[i].name << "\t" << a[i].arrival << "\t" << a[i].duration;
+				relax++;
 			}
 			cout << endl;
 		}
 		else
 		{
-			for (i = front; i <= rear; i++)
+			for (i = front; i <= rear; i++)// Line loop
 			{
-				for (j = 0; j < a[i].duration; j++)
+				if (a[i].arrival <= linenumber)
 				{
-					cout << linenumber++ << "\t" << a[i].name << "\t" << a[i].arrival << "\t";
-					if (j < a[i].duration - 1)//in between
+					for (j = 0; j < a[i].duration; j++)// each step
 					{
-						cout << "Makeup" << endl;
+						cout << linenumber++ << "\t" << a[i].name << "\t" << a[i].duration << "\t";
+						if (j < a[i].duration - 1)//in between
+						{
+							cout << "makeup" << endl;
+						}
+						else // last
+						{
+							cout << "completed" << endl;
+							relax++;
+							if (relax == 4)// relax output
+							{
+								for (int w = 0; w < 2; w++)
+								{
+									cout << linenumber++ << "\t" << "relax\n";
+									relax = 0;
+								}
+							}
+						}
 					}
-					else // last
-					{
-						cout << "Completed" << endl;
-					}
-						
+				}
+				else
+				{
+					cout << linenumber++ <<  "\twaiting\n";
+					i--;
 				}
 			}
 			cout << endl;
