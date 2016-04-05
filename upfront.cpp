@@ -10,10 +10,11 @@
 #include <cctype>
 #include <stdlib.h>
 #include <stack>
+#include <queue>
 
 using namespace std;
 
-const int MAX= 5;
+const int MAX= 25;
 
 class cqueue
 {
@@ -30,34 +31,44 @@ class cqueue
 	void display();
 };
 
-int main(int argc, char** argv)
+void cqueue::enqueue(int val)
 {
-	//std::string filename = "input=abc.txt;size=INTEGER;scheduling=SCHEDULE;quantum=NUMBER";
-	/*
-	//Set input
-	std::string filename = "input=abc.txt;size=INTEGER;scheduling=SCHEDULE;quantum=NUMBER";
-	//int linecount = 1;
-	//string filename = argv[1];
-	filename.erase(0, 6);
-
-	std::string s = filename;
-	std::string delimiter = "=";
-
-	size_t pos = 0;
-	std::string token;
-	while ((pos = s.find(delimiter)) != std::string::npos) {
-	token = s.substr(0, pos);
-	s.erase(0, pos + delimiter.length());
+	if ((front == 0 && rear == MAX - 1) || (rear + 1 == front))
+	{
+		cout << "Circular Queue is full \n";
+	}
+	else
+	{
+		if (rear == MAX - 1)
+		{
+			rear = 0;
+		}
+		else
+		{
+			rear++;
+		}
+		a[rear] = val;
+	}
+	if (front == -1)
+	{
+		front = 0;
 	}
 
-	string quantum = s;
+}
 
+int cqueue::dequeue()
+{
+	return 0;
+}
+
+void cqueue::display()
+{
+
+}
+
+int main(int argc, char** argv)
+{
 	
-	std::string f = filename;//get correct filename
-	std::string cutoff = ";";
-	std::string file = f.substr(0, f.find(cutoff)); */
-	// verify that there was 1 parameter passed.
-
 	
 	/*if (argc != 2) {
 		cout << "Error, please specify parameter correctly. This program needs a parameter to work." << endl;
@@ -65,13 +76,13 @@ int main(int argc, char** argv)
 	}*/
 	// initialize the variable 'parameter' with the argument 1
 	//string parameter(argv[1]);
-	string parameter("input=gray.txt;size=222222222222222222222;scheduling=fifo;quantum=4");
+	string parameter("input=gray.txt;size=22;scheduling=fifo;quantum=4");
 
 
 	// find the position of the semicolon
 	string::size_type position = parameter.find(';');
 	// next line is for display purposes only.
-	cout << "position: " << position << endl;
+	//cout << "position: " << position << endl;
 
 	// get only the filename via substring. The value of 10 is fixed for hw1 because the parameter always starts with: inputfile=
 	string filename = parameter.substr(6, position - 6);
@@ -82,7 +93,7 @@ int main(int argc, char** argv)
 	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
 	string::size_type position2 = parameter.find('=', position);
 	// next line is for display purposes only.
-	cout << "position2: " << position2 << endl;
+	//cout << "position2: " << position2 << endl;
 
 	string poison = parameter.substr(position+1);
 	string::size_type positioner = poison.find(';');
@@ -96,7 +107,7 @@ int main(int argc, char** argv)
 	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
 	string::size_type position3 = parameter.find('=', position2+1);
 	// next line is for display purposes only.
-	cout << "position3: " << position3 << endl;
+	//cout << "position3: " << position3 << endl;
 
 	string poison3 = parameter.substr(position3);
 	string::size_type positioner3 = poison3.find(';');
@@ -111,7 +122,7 @@ int main(int argc, char** argv)
 	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
 	string::size_type position4 = parameter.find('=', position3 + 1);
 	// next line is for display purposes only.
-	cout << "position3: " << position4 << endl;
+	//cout << "position3: " << position4 << endl;
 
 	string poison4 = parameter.substr(position4);
 	string::size_type positioner4 = poison4.find(';');
