@@ -14,13 +14,16 @@
 
 using namespace std;
 
-const int MAX= 25;
+const int MAX= 5;
+int csize = 0;
+int cquantum = 0;
 
 class cqueue
 {
 	int a[MAX];
 	int front, rear;
 
+public:
 	cqueue()
 	{
 		front = rear = -1;
@@ -35,7 +38,7 @@ void cqueue::enqueue(int val)
 {
 	if ((front == 0 && rear == MAX - 1) || (rear + 1 == front))
 	{
-		cout << "Circular Queue is full \n";
+		cout << "Circular Queue is full\n";
 	}
 	else
 	{
@@ -58,12 +61,60 @@ void cqueue::enqueue(int val)
 
 int cqueue::dequeue()
 {
-	return 0;
+	int k;
+	if (front == -1)
+	{
+		cout << "Circular Queue is Empty\n";
+	}
+	else
+	{
+		k = a[front];
+		if (front == rear)
+		{
+			front = rear = -1;
+		}
+		else if (front == MAX - 1)
+		{
+			front = 0;
+		}
+		else
+		{
+			front++;
+		}
+	}
+	return k;
 }
 
 void cqueue::display()
 {
-
+	int i;
+	if (front == -1)
+	{
+		cout << "Circular Queue is Empty\n";
+	}
+	else
+	{
+		if (rear < front)
+		{
+			for (i = front; i <= MAX - 1; i++)//print right side
+			{
+				cout << a[i]<<"\t";
+			}
+			for (i = 0; i <= rear; i++)//print first part
+			{
+				cout << a[i] << "\t";
+			}
+			cout << endl;
+		}
+		else
+		{
+			for (i = front; i <= rear; i++)
+			{
+				cout << a[i] << "\t";
+			}
+			cout << endl;
+		}
+	}
 }
 
 int main(int argc, char** argv)
@@ -87,7 +138,7 @@ int main(int argc, char** argv)
 	// get only the filename via substring. The value of 10 is fixed for hw1 because the parameter always starts with: inputfile=
 	string filename = parameter.substr(6, position - 6);
 	// next line is for display purposes only.
-	cout << "Filename: " << filename << endl;
+	//cout << "Filename: " << filename << endl;
 
 	//Size
 	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
@@ -101,7 +152,7 @@ int main(int argc, char** argv)
 	// get only the numerical value via substring. (the '+ 1' is to get the substring after the equals sign).
 	string number = poison.substr(5, positioner-5);
 	// next line is for display purposes only.
-	cout << "number: " << number << endl;
+	//cout << "number: " << number << endl;
 
 	//Scheduling
 	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
@@ -115,7 +166,7 @@ int main(int argc, char** argv)
 	// get only the numerical value via substring. (the '+ 1' is to get the substring after the equals sign).
 	string number3 = poison3.substr(1, positioner3 - 1);
 	// next line is for display purposes only.
-	cout << "schedule: " << number3 << endl;
+	//cout << "schedule: " << number3 << endl;
 
 
 	//Quantum
@@ -130,11 +181,31 @@ int main(int argc, char** argv)
 	// get only the numerical value via substring. (the '+ 1' is to get the substring after the equals sign).
 	string number4 = poison4.substr(1, positioner4 - 1);
 	// next line is for display purposes only.
-	cout << "schedule: " << number4 << endl;
+	//cout << "schedule: " << number4 << endl;
 
 
 	//ifstream instream(file);//Obtain Input Stream
-								
+	
+	cqueue c1;
+
+	csize = stoi(number);
+	cquantum = stoi(number4);
+	int choice;
+	int value;
+
+	/*
+	c1.enqueue(1);
+	c1.enqueue(2);
+	c1.enqueue(3);
+	c1.enqueue(4);
+	c1.enqueue(5);
+	c1.display();
+	c1.dequeue();
+	c1.enqueue(68);
+	c1.display();
+	c1.enqueue(420);
+	c1.display();*/
+
 
 	system("pause");
 	return 0;
