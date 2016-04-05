@@ -14,13 +14,22 @@
 
 using namespace std;
 
-const int MAX= 5;
+const int MAX= 250;
 int csize = 0;
 int cquantum = 0;
+int linenumber = 0;
+int relax = 0;
+
+struct actor
+{
+	string name;
+	int arrival;
+	int duration;
+};
 
 class cqueue
 {
-	int a[MAX];
+	actor a[MAX];
 	int front, rear;
 
 public:
@@ -29,12 +38,12 @@ public:
 		front = rear = -1;
 	}
 
-	void enqueue(int);
-	int dequeue();
+	void enqueue(actor);
+	actor dequeue();
 	void display();
 };
 
-void cqueue::enqueue(int val)
+void cqueue::enqueue(actor val)
 {
 	if ((front == 0 && rear == MAX - 1) || (rear + 1 == front))
 	{
@@ -59,9 +68,9 @@ void cqueue::enqueue(int val)
 
 }
 
-int cqueue::dequeue()
+actor cqueue::dequeue()
 {
-	int k;
+	actor k;
 	if (front == -1)
 	{
 		cout << "Circular Queue is Empty\n";
@@ -88,6 +97,7 @@ int cqueue::dequeue()
 void cqueue::display()
 {
 	int i;
+	int j;
 	if (front == -1)
 	{
 		cout << "Circular Queue is Empty\n";
@@ -98,11 +108,11 @@ void cqueue::display()
 		{
 			for (i = front; i <= MAX - 1; i++)//print right side
 			{
-				cout << a[i]<<"\t";
+				cout << linenumber++ << "\t" <<a[i].name <<"\t"<< a[i].arrival << "\t" << a[i].duration;
 			}
 			for (i = 0; i <= rear; i++)//print first part
 			{
-				cout << a[i] << "\t";
+				cout << linenumber++ << "\t" << a[i].name << "\t" << a[i].arrival << "\t" << a[i].duration;
 			}
 			cout << endl;
 		}
@@ -110,7 +120,19 @@ void cqueue::display()
 		{
 			for (i = front; i <= rear; i++)
 			{
-				cout << a[i] << "\t";
+				for (j = 0; j < a[i].duration; j++)
+				{
+					cout << linenumber++ << "\t" << a[i].name << "\t" << a[i].arrival << "\t";
+					if (j < a[i].duration - 1)//in between
+					{
+						cout << "Makeup" << endl;
+					}
+					else // last
+					{
+						cout << "Completed" << endl;
+					}
+						
+				}
 			}
 			cout << endl;
 		}
@@ -184,18 +206,58 @@ int main(int argc, char** argv)
 	//cout << "schedule: " << number4 << endl;
 
 
-	//ifstream instream(file);//Obtain Input Stream
+	ifstream instream(filename);//Obtain Input Stream
+	string line;
+	string element;
+	int elementn = 0;
 	
-	cqueue c1;
 
-	csize = stoi(number);
-	cquantum = stoi(number4);
-	int choice;
-	int value;
+	cqueue c1;//queue
+	actor temp;// actor placeholder
 
-	/*
-	c1.enqueue(1);
-	c1.enqueue(2);
+	temp.name = "";//Example
+	temp.arrival = 0;
+	temp.duration = 0;
+
+
+	csize = stoi(number);// Size
+	cquantum = stoi(number4);// Quantum
+
+	if (number3 == "fifo")
+	{
+		while (!instream.eof())
+		{
+			getline(instream, line, '\n');
+			istringstream some(line);
+			while (!some.eof()) {// loop for each element
+				getline(some, element, '\t');
+			
+				{
+					temp.name = element;
+					elementn++;
+				}
+			
+				{
+					getline(some, element, '\t');
+					temp.arrival = stoi(element);
+					elementn++;
+				}
+				
+				{
+					getline(some, element, '\t');
+					temp.duration = stoi(element);
+					elementn = 0;
+				}
+				c1.enqueue(temp);
+			}
+			//c1.enqueue(temp);
+			
+			
+		}
+		c1.display();
+	}
+	
+	/*c1.enqueue(2);
 	c1.enqueue(3);
 	c1.enqueue(4);
 	c1.enqueue(5);
