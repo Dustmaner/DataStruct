@@ -152,7 +152,7 @@ void cqueue::display()
 					i--;
 				}
 			}
-			cout << endl;
+			//cout << endl;
 		}
 	}
 }
@@ -247,6 +247,7 @@ int main(int argc, char** argv)
 		{
 			getline(instream, line, '\n');
 			istringstream some(line);
+			if(some.peek() != 35)// Check if it is a comment
 			while (!some.eof()) {// loop for each element
 				getline(some, element, '\t');
 			
