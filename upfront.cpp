@@ -8,7 +8,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stack>
 #include <queue>
 
@@ -18,7 +18,188 @@ const int MAX= 250;
 int csize = 0;
 int cquantum = 0;
 int linenumber = 0;
+int timeq = 0;
 int relax = 0;
+int elementsNB = -1;
+int tempDuration = 0;
+
+template <class Type>
+class queueADT
+{
+public:
+	//Function to determine whether the queue is empty.
+	//Postcondition: Returns true if the queue is empty,
+	// otherwise returns false.
+	virtual bool isEmptyQueue() const = 0;
+	//Function to determine whether the queue is full.
+	//Postcondition: Returns true if the queue is full,
+	// otherwise returns false.
+	virtual bool isFullQueue() const = 0;
+	//Function to initialize the queue to an empty state.
+	//Postcondition: The queue is empty.
+	virtual void initializeQueue() = 0;
+	//Function to return the first element of the queue.
+	//Precondition: The queue exists and is not empty.
+	//Postcondition: If the queue is empty, the program
+	// terminates; otherwise, the first element of the queue
+	// is returned.
+	virtual Type front() const = 0;
+	//Function to return the last element of the queue.
+	//Precondition: The queue exists and is not empty.
+	//Postcondition: If the queue is empty, the program
+	// terminates; otherwise, the last element of the queue
+	// is returned.
+	virtual Type back() const = 0;
+	//Function to add queueElement to the queue.
+	//Precondition: The queue exists and is not full.
+	//Postcondition: The queue is changed and queueElement is
+	// added to the queue.
+	virtual void addQueue(const Type& queueElement) = 0;
+	//Function to remove the first element of the queue.
+	//Precondition: The queue exists and is not empty.
+	//Postcondition: The queue is changed and the first element
+	// is removed from the queue.
+	virtual void deleteQueue() = 0;
+	
+};
+
+template <class Type>
+class queueType : public queueADT<Type>
+{
+public:
+	const queueType<Type>& operator=(const queueType<Type>&);
+	//Overload the assignment operator.
+	bool isEmptyQueue() const;
+	//Function to determine whether the queue is empty.
+	//Postcondition: Returns true if the queue is empty,
+	// otherwise returns false.
+	bool isFullQueue() const;
+	//Function to determine whether the queue is full.
+	//Postcondition: Returns true if the queue is full,
+	// otherwise returns false.
+	void initializeQueue();
+	//Function to initialize the queue to an empty state.
+	//Postcondition: The queue is empty.
+	Type front() const;
+	//Function to return the first element of the queue.
+	//Precondition: The queue exists and is not empty.
+	//Postcondition: If the queue is empty, the program
+	// terminates; otherwise, the first element of the
+	// queue is returned.
+	Type back() const;
+	//Function to return the last element of the queue.
+	//Precondition: The queue exists and is not empty.
+	//Postcondition: If the queue is empty, the program
+	// terminates; otherwise, the last element of the queue
+	// is returned.
+	void addQueue(const Type& queueElement);
+	//Function to add queueElement to the queue.
+	//Precondition: The queue exists and is not full.
+	//Postcondition: The queue is changed and queueElement is
+	// added to the queue.
+	void deleteQueue();
+	//Function to remove the first element of the queue.
+	//Precondition: The queue exists and is not empty.
+	//Postcondition: The queue is changed and the first element
+	// is removed from the queue.
+	queueType(int queueSize = 100);
+	//Constructor
+	queueType(const queueType<Type>& otherQueue);
+	//Copy constructor
+	~queueType();
+	//Destructor
+private:
+	int maxQueueSize; //variable to store the maximum queue size
+	int count; //variable to store the number of
+			   //elements in the queue
+	int queueFront; //variable to point to the first
+					//element of the queue
+	int queueRear; //variable to point to the last
+				   //element of the queue
+	Type *list; //pointer to the array that holds
+				//the queue elements
+};
+
+template <class Type>
+bool queueType<Type>::isEmptyQueue() const
+{
+	return (count == 0);
+} //end isEmptyQueue
+template <class Type>
+bool queueType<Type>::isFullQueue() const
+{
+	return (count == maxQueueSize);
+} //end isFullQueue
+template <class Type>
+Type queueType<Type>::front() const
+{
+	//assert(!isEmptyQueue());
+	return list[queueFront];
+} //end front
+template <class Type>
+Type queueType<Type>::back() const
+{
+	assert(!isEmptyQueue());
+	return list[queueRear];
+} //end back
+template <class Type>
+void queueType<Type>::initializeQueue()
+{
+	queueFront = 0;
+	queueRear = maxQueueSize - 1;
+	count = 0;
+} //end initializeQueue
+template <class Type>
+void queueType<Type>::addQueue(const Type& newElement)
+{
+	if (!isFullQueue())
+	{
+		queueRear = (queueRear + 1) % maxQueueSize; //use the
+													//mod operator to advance queueRear
+													//because the array is circular
+		count++;
+		list[queueRear] = newElement;
+	}
+	else
+		cout << "Cannot add to a full queue." << endl;
+} //end addQueue
+template <class Type>
+void queueType<Type>::deleteQueue()
+{
+	if (!isEmptyQueue())
+	{
+		count--;
+		queueFront = (queueFront + 1) % maxQueueSize; //use the
+													  //mod operator to advance queueFront
+													  //because the array is circular
+	}
+	else
+		cout << "Cannot remove from an empty queue" << endl;
+} //end deleteQueue
+template <class Type>
+queueType<Type>::queueType(int queueSize)
+{
+	if (queueSize <= 0)
+	{
+		cout << "Size of the array to hold the queue must "
+			<< "be positive." << endl;
+		cout << "Creating an array of size 100." << endl;
+		maxQueueSize = 100;
+	}
+	else
+		maxQueueSize = queueSize; //set maxQueueSize to
+								  //queueSize
+	queueFront = 0; //initialize queueFront
+	queueRear = maxQueueSize - 1; //initialize queueRear
+	count = 0;
+	list = new Type[maxQueueSize]; //create the array to
+								   //hold the queue elements
+} //end constructor
+template <class Type>
+queueType<Type>::~queueType()
+{
+	delete[] list;
+}
 
 struct actor
 {
@@ -27,12 +208,21 @@ struct actor
 	int duration;
 };
 
+ostream& operator<< (ostream& osObject,
+	const actor& rectangle)
+{
+	osObject << linenumber++ << "\t" << rectangle.name
+		<< "\t" << rectangle.duration << "\t";
+	return osObject;
+}
+
 class cqueue
 {
+public:
 	actor a[MAX];
 	int front, rear;
 
-public:
+//public:
 	cqueue()
 	{
 		front = rear = -1;
@@ -139,8 +329,11 @@ void cqueue::display()
 							{
 								for (int w = 0; w < 2; w++)
 								{
-									cout << linenumber++ << "\t" << "relax\n";
-									relax = 0;
+									if (i != elementsNB)// check if it is not the last element
+									{
+										cout << linenumber++ << "\t" << "relax\n";
+										relax = 0;
+									}
 								}
 							}
 						}
@@ -167,7 +360,7 @@ int main(int argc, char** argv)
 	}*/
 	// initialize the variable 'parameter' with the argument 1
 	//string parameter(argv[1]);
-	string parameter("input=gray.txt;size=22;scheduling=fifo;quantum=4");
+	string parameter("input=gray.txt;size=22;scheduling=roundrobin;quantum=4");
 
 
 	// find the position of the semicolon
@@ -238,10 +431,10 @@ int main(int argc, char** argv)
 	temp.duration = 0;
 
 
-	csize = stoi(number);// Size
-	cquantum = stoi(number4);// Quantum
+	csize = std::stoi(number);// Size
+	cquantum = std::stoi(number4);// Quantum
 
-	if (number3 == "fifo")
+	if (number3 == "fifo" || number3 == "shortfifo")
 	{
 		while (!instream.eof())
 		{
@@ -253,20 +446,26 @@ int main(int argc, char** argv)
 			
 				{
 					temp.name = element;
+					//cout << temp.name << endl;
+					//cout << element << endl;
 					elementn++;
 				}
 			
 				{
 					getline(some, element, '\t');
-					temp.arrival = stoi(element);
+					//cout << "before\n";
+					//cout << element << endl;
+					temp.arrival = std::stoi(element);
+					//cout << "after\n";
 					elementn++;
 				}
 				
 				{
 					getline(some, element, '\t');
-					temp.duration = stoi(element);
+					temp.duration = std::stoi(element);
 					elementn = 0;
 				}
+				elementsNB++;
 				c1.enqueue(temp);
 			}
 			//c1.enqueue(temp);
@@ -276,6 +475,105 @@ int main(int argc, char** argv)
 		c1.display();
 	}
 	
+	queueType<actor> c2;
+	if (number3 == "roundrobin")
+	{
+
+		queueType<actor> squeue(stoi(number4));
+		while (!instream.eof())
+		{
+			getline(instream, line, '\n');
+			istringstream some(line);
+			if (some.peek() != 35)// Check if it is a comment
+				while (!some.eof()) {// loop for each element
+					getline(some, element, '\t');
+
+					{
+						temp.name = element;
+						//cout << temp.name << endl;
+						//cout << element << endl;
+						elementn++;
+					}
+
+					{
+						getline(some, element, '\t');
+						//cout << "before\n";
+						//cout << element << endl;
+						temp.arrival = std::stoi(element);
+						//cout << "after\n";
+						elementn++;
+					}
+
+					{
+						getline(some, element, '\t');
+						temp.duration = std::stoi(element);
+						elementn = 0;
+					}
+					elementsNB++;
+					c1.enqueue(temp);
+					c2.addQueue(temp);
+				}
+		}//Finished Big Queue
+		/*while (c2.isEmptyQueue() == 0)
+		{
+
+			//squeue.addQueue(c2.front());
+			//cout << c2.front() << endl;
+			//c2.deleteQueue();
+		}*/
+		/*if (c2.isEmptyQueue() == 0)
+		{
+			squeue.addQueue(c2.front());
+			c2.deleteQueue();
+		}*/
+		do
+		{
+			//cout << c2.isEmptyQueue() << endl;
+			//cout << c2.front().arrival << endl;
+			//cout << c2.back() << endl;
+			while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0)// add from big queue to small queue
+			{
+				squeue.addQueue(c2.front());
+				c2.deleteQueue();
+			}
+			if (squeue.front().arrival <= timeq && squeue.isEmptyQueue() == 0)// Arrived: 
+			{
+				temp = squeue.front();
+				tempDuration = temp.duration;// Set duration time for working
+				for (int i = tempDuration; i > 1; i--)
+				{
+					cout << squeue.front() << "makeup" <<  endl;//makeup
+					//squeue.front().duration;
+					timeq++;
+
+				}
+				cout << squeue.front() << "completed" << endl;// completed
+				relax++;
+				if (relax == 4)// relax output
+				{
+					for (int w = 0; w < 2; w++)
+					{
+							cout << linenumber++ << "\t" << "relax\n";
+							relax = 0;
+							timeq++;						
+					}
+				}
+				squeue.deleteQueue();// take working element
+
+			}
+			else
+			{
+				cout << linenumber++ << "\twaiting" << endl;// squeue is empty
+			}
+			timeq++;
+			//cout << squeue.front() << endl;
+			//squeue.deleteQueue();
+		} while (c2.isEmptyQueue() == 0 && squeue.isEmptyQueue() == 0);
+
+			//cout << "roundrobin\n";
+			//c1.display();
+	}
+
 	/*c1.enqueue(2);
 	c1.enqueue(3);
 	c1.enqueue(4);
