@@ -360,8 +360,8 @@ int main(int argc, char** argv)
 		return 0;
 	}*/
 	// initialize the variable 'parameter' with the argument 1
-	//string parameter(argv[1]);
-	string parameter("input=gray.txt;size=2;scheduling=roundrobin;quantum=2");
+	string parameter(argv[1]);
+	//string parameter("input=gray.txt;size=2;scheduling=roundrobin;quantum=2");
 
 
 	// find the position of the semicolon
@@ -558,15 +558,7 @@ int main(int argc, char** argv)
 						cout << squeue.front() << "completed" << endl;// completed
 						temp.duration--;
 						relax++;
-						if (relax == 4)// relax output
-						{
-							for (int w = 0; w < 2; w++)
-							{
-								cout << linenumber++ << "\t" << "relax\n";
-								relax = 0;
-								timeq++;
-							}
-						}
+						
 					}
 					if (temp.duration > 1)
 					{
@@ -590,6 +582,15 @@ int main(int argc, char** argv)
 				}
 
 				squeue.deleteQueue();// take working element
+				if (relax == 4 && (squeue.isEmptyQueue() == 0 || c2.isEmptyQueue() == 0))// relax output
+				{
+					for (int w = 0; w < 2; w++)
+					{
+						cout << linenumber++ << "\t" << "relax\n";
+						relax = 0;
+						timeq++;
+					}
+				}
 				if (temp.duration != 0)// requeueable?
 				{
 					squeue.addQueue(temp);// requeue
@@ -620,6 +621,6 @@ int main(int argc, char** argv)
 	c1.display();*/
 
 
-	system("pause");
+	//system("pause");
 	return 0;
 }
