@@ -206,13 +206,14 @@ struct actor
 	string name;
 	int arrival;
 	int duration;
+	int durationStatic;
 };
 
 ostream& operator<< (ostream& osObject,
 	const actor& rectangle)
 {
 	osObject << linenumber++ << "\t" << rectangle.name
-		<< "\t" << rectangle.duration << "\t";
+		<< "\t" << rectangle.durationStatic << "\t";
 	return osObject;
 }
 
@@ -360,7 +361,7 @@ int main(int argc, char** argv)
 	}*/
 	// initialize the variable 'parameter' with the argument 1
 	//string parameter(argv[1]);
-	string parameter("input=gray.txt;size=22;scheduling=roundrobin;quantum=4");
+	string parameter("input=gray.txt;size=2;scheduling=roundrobin;quantum=2");
 
 
 	// find the position of the semicolon
@@ -479,7 +480,7 @@ int main(int argc, char** argv)
 	if (number3 == "roundrobin")
 	{
 
-		queueType<actor> squeue(stoi(number4));
+		queueType<actor> squeue(csize);
 		while (!instream.eof())
 		{
 			getline(instream, line, '\n');
@@ -507,6 +508,7 @@ int main(int argc, char** argv)
 					{
 						getline(some, element, '\t');
 						temp.duration = std::stoi(element);
+						temp.durationStatic = std::stoi(element);
 						elementn = 0;
 					}
 					elementsNB++;
@@ -531,36 +533,67 @@ int main(int argc, char** argv)
 			//cout << c2.isEmptyQueue() << endl;
 			//cout << c2.front().arrival << endl;
 			//cout << c2.back() << endl;
-			if(c2.isEmptyQueue() == 0)
-			while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0)// add from big queue to small queue
+			if (c2.isEmptyQueue() == 0)// arived?
 			{
-				squeue.addQueue(c2.front());
-				c2.deleteQueue();
+				while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+				{
+					if (c2.isEmptyQueue() == 0)
+					{
+						squeue.addQueue(c2.front());
+						c2.deleteQueue();
+					}
+				}
 			}
-			if (squeue.front().arrival <= timeq && squeue.isEmptyQueue() == 0)// Arrived: 
+			if (squeue.front().arrival <= linenumber && squeue.isEmptyQueue() == 0)// Arrived: 
 			{
 				temp = squeue.front();
 				tempDuration = temp.duration;// Set duration time for working
-				for (int i = tempDuration; i > 1; i--)
-				{
-					cout << squeue.front() << "makeup" <<  endl;//makeup
-					//squeue.front().duration;
-					timeq++;
 
-				}
-				cout << squeue.front() << "completed" << endl;// completed
-				relax++;
-				if (relax == 4)// relax output
+				for (int i = 0; i < cquantum; i++)//quantum
 				{
-					for (int w = 0; w < 2; w++)
+
+
+					if (temp.duration==1)//completed
 					{
-							cout << linenumber++ << "\t" << "relax\n";
-							relax = 0;
-							timeq++;						
+						cout << squeue.front() << "completed" << endl;// completed
+						temp.duration--;
+						relax++;
+						if (relax == 4)// relax output
+						{
+							for (int w = 0; w < 2; w++)
+							{
+								cout << linenumber++ << "\t" << "relax\n";
+								relax = 0;
+								timeq++;
+							}
+						}
+					}
+					if (temp.duration > 1)
+					{
+						cout << squeue.front() << "makeup" << endl;//makeup
+						temp.duration--;
+						timeq++;
+
 					}
 				}
-				squeue.deleteQueue();// take working element
+				
+				if (c2.isEmptyQueue() == 0)// arived?
+				{
+					while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+					{
+						if (c2.isEmptyQueue() == 0)
+						{
+							squeue.addQueue(c2.front());
+							c2.deleteQueue();
+						}
+					}
+				}
 
+				squeue.deleteQueue();// take working element
+				if (temp.duration != 0)// requeueable?
+				{
+					squeue.addQueue(temp);// requeue
+				}
 			}
 			else
 			{
