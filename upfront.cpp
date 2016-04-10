@@ -531,6 +531,7 @@ int main(int argc, char** argv)
 			//cout << c2.isEmptyQueue() << endl;
 			//cout << c2.front().arrival << endl;
 			//cout << c2.back() << endl;
+			if(c2.isEmptyQueue() == 0)
 			while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0)// add from big queue to small queue
 			{
 				squeue.addQueue(c2.front());
@@ -568,7 +569,7 @@ int main(int argc, char** argv)
 			timeq++;
 			//cout << squeue.front() << endl;
 			//squeue.deleteQueue();
-		} while (c2.isEmptyQueue() == 0 && squeue.isEmptyQueue() == 0);
+		} while (c2.isEmptyQueue() == 0 || squeue.isEmptyQueue() == 0);
 
 			//cout << "roundrobin\n";
 			//c1.display();
