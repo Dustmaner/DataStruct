@@ -360,8 +360,8 @@ int main(int argc, char** argv)
 		return 0;
 	}*/
 	// initialize the variable 'parameter' with the argument 1
-	string parameter(argv[1]);
-	//string parameter("input=gray.txt;size=2;scheduling=roundrobin;quantum=2");
+	//string parameter(argv[1]);
+	string parameter("input=gray.txt;size=4;scheduling=roundrobin;quantum=2");
 
 
 	// find the position of the semicolon
@@ -535,7 +535,7 @@ int main(int argc, char** argv)
 			//cout << c2.back() << endl;
 			if (c2.isEmptyQueue() == 0)// arived?
 			{
-				while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+				while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 				{
 					if (c2.isEmptyQueue() == 0)
 					{
@@ -571,7 +571,7 @@ int main(int argc, char** argv)
 				
 				if (c2.isEmptyQueue() == 0)// arived?
 				{
-					while (c2.front().arrival <= timeq && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 					{
 						if (c2.isEmptyQueue() == 0)
 						{
@@ -589,6 +589,17 @@ int main(int argc, char** argv)
 						cout << linenumber++ << "\t" << "relax\n";
 						relax = 0;
 						timeq++;
+					}
+				}
+				if (c2.isEmptyQueue() == 0)// arived?
+				{
+					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+					{
+						if (c2.isEmptyQueue() == 0)
+						{
+							squeue.addQueue(c2.front());
+							c2.deleteQueue();
+						}
 					}
 				}
 				if (temp.duration != 0)// requeueable?
@@ -621,6 +632,6 @@ int main(int argc, char** argv)
 	c1.display();*/
 
 
-	//system("pause");
+	system("pause");
 	return 0;
 }
