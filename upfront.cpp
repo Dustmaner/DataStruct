@@ -4,13 +4,13 @@
 #include <cstdlib>
 #include <iomanip>
 #include <assert.h>
-#include <math.h>
+//#include <math.h>
 #include <sstream>
-#include <algorithm>
-#include <cctype>
-#include <stdlib.h>
-#include <stack>
-#include <queue>
+//#include <algorithm>
+//#include <cctype>
+//#include <stdlib.h>
+//#include <stack>
+//#include <queue>
 
 using namespace std;
 
@@ -72,6 +72,10 @@ public:
 	bool isEmptyQueue() const;
 	//Function to determine whether the queue is empty.
 	//Postcondition: Returns true if the queue is empty,
+	// otherwise returns false.bool 
+	bool getCount() const;
+	//Function to determine whether the queue is empty.
+	//Postcondition: Returns true if the queue is empty,
 	// otherwise returns false.
 	bool isFullQueue() const;
 	//Function to determine whether the queue is full.
@@ -126,6 +130,11 @@ bool queueType<Type>::isEmptyQueue() const
 	return (count == 0);
 } //end isEmptyQueue
 template <class Type>
+bool queueType<Type>::getCount() const
+{
+	return count;
+} //end count
+template <class Type>
 bool queueType<Type>::isFullQueue() const
 {
 	return (count == maxQueueSize);
@@ -160,8 +169,8 @@ void queueType<Type>::addQueue(const Type& newElement)
 		count++;
 		list[queueRear] = newElement;
 	}
-	/*else
-		cout << "Cannot add to a full queue." << endl;*/
+	else
+		cout << "Cannot add to a full queue." << endl;
 } //end addQueue
 template <class Type>
 void queueType<Type>::deleteQueue()
@@ -173,8 +182,8 @@ void queueType<Type>::deleteQueue()
 													  //mod operator to advance queueFront
 													  //because the array is circular
 	}
-	/*else
-		cout << "Cannot remove from an empty queue" << endl;*/
+	else
+		cout << "Cannot remove from an empty queue" << endl;
 } //end deleteQueue
 template <class Type>
 queueType<Type>::queueType(int queueSize)
@@ -481,11 +490,11 @@ int main(int argc, char** argv)
 	{
 
 		queueType<actor> squeue(csize);
-		while (!instream.eof())
+		while (!instream.eof())// This sets up the Big Queue that will contain the whole input file
 		{
 			getline(instream, line, '\n');
 			istringstream some(line);
-			if (some.peek() != 35)// Check if it is a comment
+			if (some.peek() != 35 && some.peek() != '\n')// Check if it is a comment
 				while (!some.eof()) {// loop for each element
 					getline(some, element, '\t');
 
@@ -516,133 +525,102 @@ int main(int argc, char** argv)
 					c2.addQueue(temp);
 				}
 		}//Finished Big Queue
-		/*while (c2.isEmptyQueue() == 0)
-		{
 
-			//squeue.addQueue(c2.front());
-			//cout << c2.front() << endl;
-			//c2.deleteQueue();
-		}*/
-		/*if (c2.isEmptyQueue() == 0)
+
+		do// This is the quantum working
 		{
-			squeue.addQueue(c2.front());
-			c2.deleteQueue();
-		}*/
-		do
-		{
-			//cout << c2.isEmptyQueue() << endl;
-			//cout << c2.front().arrival << endl;
-			//cout << c2.back() << endl;
-			if (c2.isEmptyQueue() == 0)// arived?
+			//cout << "1";
+			if (c2.isEmptyQueue() == 0)// has an actor arrived?
 			{
-			
-				//cout << "nuts\n";
+
+				//Keep putting arrivals into the small working queue as long as it is not full(the small queue size is a parameter of my program) 
 				while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 				{
-					if (c2.isEmptyQueue() == 0)
+					if (c2.isEmptyQueue() == 0)// as long as big queue is not empty
 					{
-						squeue.addQueue(c2.front());
-						c2.deleteQueue();
+						//cout << "2";
+						squeue.addQueue(c2.front()); // add to small queue
+						c2.deleteQueue(); // delete from bigqueue
 					}
 				}
 			}
-			/*else
-				cout << "deez\n";*/
+
 
 			if (squeue.front().arrival <= linenumber && squeue.isEmptyQueue() == 0)// Arrived: 
 			{
-				temp = squeue.front();
+				//cout << "3";
+				temp = squeue.front();// hold the front of the queue as a modifiable variable
 				tempDuration = temp.duration;// Set duration time for working
 
 				for (int i = 0; i < cquantum; i++)//quantum
 				{
 
-
-					if (temp.duration==1)//completed
+					//cout << ":va";
+					if (temp.duration == 1)//completed
 					{
+						//cout << "4";
 						cout << squeue.front() << "completed" << endl;// completed
 						temp.duration--;
 						relax++;
-						
+
 					}
 					if (temp.duration > 1)
 					{
-						cout << squeue.front() << "makeup" << endl;//makeup
+						//cout << "5";
+						cout << squeue.front() << "makeup" <<endl;//makeup work
+						//cout << ":vb";
 						temp.duration--;
-						timeq++;
-
+						//timeq++;
+						
 					}
 				}
 				
-				if (c2.isEmptyQueue() == 0)// arived?
+				if (c2.getCount() > 0)// has an actor arrived?
 				{
-					//cout << "nuts\n";
+					//cout << "6";
+					//Keep putting arrivals into the small working queue as long as it is not full(the small queue size is a parameter of my program) 
 					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 					{
-						if (c2.isEmptyQueue() == 0)
+						if (c2.isEmptyQueue() == 0)// as long as big queue is not empty
 						{
-							squeue.addQueue(c2.front());
-							c2.deleteQueue();
+							//cout << "7";
+							squeue.addQueue(c2.front()); // add to small queue
+							c2.deleteQueue(); // delete from bigqueue
 						}
 					}
 				}
-				/*else
-					cout << "deez\n";*/
 
-				squeue.deleteQueue();// take working element
+
+				squeue.deleteQueue();// delete working element (temp variable still holds the information)
+
+				//Relax every four actors that display completed
 				if (relax == 4 && (squeue.isEmptyQueue() == 0 || c2.isEmptyQueue() == 0))// relax output
 				{
+					//cout << "8";
 					for (int w = 0; w < 2; w++)
 					{
-						cout << linenumber++ << "\t" << "relax\n";
+						cout << linenumber++ << "\t" << "relax\n";// relax two time units
 						relax = 0;
-						timeq++;
+						timeq++;// timeq is just here for reference it is not actually used
 					}
 				}
-				if (c2.isEmptyQueue() == 0)// arived?
-				{
-					//cout << "nuts\n";
-					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
-					{
-						if (c2.isEmptyQueue() == 0)
-						{
-							squeue.addQueue(c2.front());
-							c2.deleteQueue();
-						}
-					}
-				}
-				/*else
-					cout << "deez\n";*/
 
-				if (temp.duration != 0)// requeueable?
+
+				if (temp.duration != 0)// if temp is still not completed
 				{
+					//cout << "9";
 					squeue.addQueue(temp);// requeue
 				}
 			}
 			else
 			{
-				cout << linenumber++ << "\twaiting" << endl;// squeue is empty
+				cout << linenumber++ << "\twaiting" << endl;// Wait until there is someone to work on(squeue is empty)
 			}
-			timeq++;
-			//cout << squeue.front() << endl;
-			//squeue.deleteQueue();
-		} while (c2.isEmptyQueue() == 0 || squeue.isEmptyQueue() == 0);
+			timeq++;// timeq is just here for reference it is not actually used
 
-			//cout << "roundrobin\n";
-			//c1.display();
+		} while (c2.isEmptyQueue() == 0 || squeue.isEmptyQueue() == 0);// check if any queue has actors left to be worked on
+
 	}
-
-	/*c1.enqueue(2);
-	c1.enqueue(3);
-	c1.enqueue(4);
-	c1.enqueue(5);
-	c1.display();
-	c1.dequeue();
-	c1.enqueue(68);
-	c1.display();
-	c1.enqueue(420);
-	c1.display();*/
-
 
 	system("pause");
 	return 0;
