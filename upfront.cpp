@@ -362,15 +362,16 @@ void cqueue::display()
 
 int main(int argc, char** argv)
 {
-	
+	int loopi = 1;
+	//cout << "A" << loopi++<<"\t";
 	
 	/*if (argc != 2) {
 		cout << "Error, please specify parameter correctly. This program needs a parameter to work." << endl;
 		return 0;
 	}*/
 	// initialize the variable 'parameter' with the argument 1
-	//string parameter(argv[1]);
-	string parameter("input=grayy.txt;size=4;scheduling=roundrobin;quantum=2");
+	string parameter(argv[1]);
+	//string parameter("input=grayy.txt;size=3;scheduling=roundrobin;quantum=3");
 
 
 	// find the position of the semicolon
@@ -492,10 +493,15 @@ int main(int argc, char** argv)
 		queueType<actor> squeue(csize);
 		while (!instream.eof())// This sets up the Big Queue that will contain the whole input file
 		{
+			//cout << "A" << loopi++ << "\t";
 			getline(instream, line, '\n');
 			istringstream some(line);
-			if (some.peek() != 35 && some.peek() != '\n')// Check if it is a comment
+			if (some.peek() != 35 && some.peek() != '\n' && some.peek() != 00 && some.peek() > 64 && some.peek() < 123)// Check if it is a comment
+			{
+
 				while (!some.eof()) {// loop for each element
+					//cout << "B" << loopi++ << "\t";
+					//cout << line << endl;
 					getline(some, element, '\t');
 
 					{
@@ -524,23 +530,35 @@ int main(int argc, char** argv)
 					c1.enqueue(temp);
 					c2.addQueue(temp);
 				}
+			}
 		}//Finished Big Queue
-
+		instream.close();
 
 		do// This is the quantum working
 		{
-			//cout << "1";
+			if (loopi > 100)//debug limit
+				return 0;
+
+			//cout << "G" << loopi++ << "\t";
+
 			if (c2.isEmptyQueue() == 0)// has an actor arrived?
 			{
 
 				//Keep putting arrivals into the small working queue as long as it is not full(the small queue size is a parameter of my program) 
-				while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+				if (squeue.isFullQueue() == 0)
+				while (c2.front().arrival <= linenumber  && c2.front().arrival >= 0 && c2.front().durationStatic > 0 && squeue.isFullQueue() == 0)// add from big queue to small queue
 				{
+					//cout << "C" << loopi++ << "\t";
 					if (c2.isEmptyQueue() == 0)// as long as big queue is not empty
 					{
-						//cout << "2";
-						squeue.addQueue(c2.front()); // add to small queue
-						c2.deleteQueue(); // delete from bigqueue
+						//cout << "A" << loopi++ <<endl;
+						
+						{
+
+
+							squeue.addQueue(c2.front()); // add to small queue
+							c2.deleteQueue(); // delete from bigqueue
+						}
 					}
 				}
 			}
@@ -548,17 +566,14 @@ int main(int argc, char** argv)
 
 			if (squeue.front().arrival <= linenumber && squeue.isEmptyQueue() == 0)// Arrived: 
 			{
-				//cout << "3";
 				temp = squeue.front();// hold the front of the queue as a modifiable variable
 				tempDuration = temp.duration;// Set duration time for working
 
 				for (int i = 0; i < cquantum; i++)//quantum
 				{
-
-					//cout << ":va";
+					//cout << "D" << loopi++ << "\t";
 					if (temp.duration == 1)//completed
 					{
-						//cout << "4";
 						cout << squeue.front() << "completed" << endl;// completed
 						temp.duration--;
 						relax++;
@@ -566,27 +581,38 @@ int main(int argc, char** argv)
 					}
 					if (temp.duration > 1)
 					{
-						//cout << "5";
 						cout << squeue.front() << "makeup" <<endl;//makeup work
-						//cout << ":vb";
 						temp.duration--;
-						//timeq++;
+
 						
 					}
 				}
 				
 				if (c2.getCount() > 0)// has an actor arrived?
 				{
-					//cout << "6";
 					//Keep putting arrivals into the small working queue as long as it is not full(the small queue size is a parameter of my program) 
-					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
+					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0 && c2.front().durationStatic > 0)// add from big queue to small queue
 					{
+						/*cout << "E" << loopi++ << "\t";
+						cout << "\nc2.front().arrival == " << c2.front().arrival<<endl;
+						
+						cout << "linenumber == " << linenumber<<endl;
+						cout << "squeue.isFullQueue() == " << squeue.isFullQueue() << endl;
+						cout << "c2.isEmptyQueue() == " << c2.isEmptyQueue() << endl;*/
 						if (c2.isEmptyQueue() == 0)// as long as big queue is not empty
 						{
-							//cout << "7";
+							//cout << "\nXY\n";
+							//cout << "B" << loopi++ << endl;
 							squeue.addQueue(c2.front()); // add to small queue
 							c2.deleteQueue(); // delete from bigqueue
 						}
+						if (loopi > 100)//debug limit
+							return 0;
+						/*cout << "FE" << loopi++ << "\t";
+						cout << "\nc2.front().arrival == " << c2.front().arrival << endl;
+						cout << "linenumber == " << linenumber << endl;
+						cout << "squeue.isFullQueue() == " << squeue.isFullQueue() << endl;
+						cout << "c2.isEmptyQueue() == " << c2.isEmptyQueue() << endl;*/
 					}
 				}
 
@@ -596,19 +622,20 @@ int main(int argc, char** argv)
 				//Relax every four actors that display completed
 				if (relax == 4 && (squeue.isEmptyQueue() == 0 || c2.isEmptyQueue() == 0))// relax output
 				{
-					//cout << "8";
 					for (int w = 0; w < 2; w++)
 					{
+						//cout << "F" << loopi++ << "\t";
 						cout << linenumber++ << "\t" << "relax\n";// relax two time units
 						relax = 0;
-						timeq++;// timeq is just here for reference it is not actually used
+						//timeq++;// timeq is just here for reference it is not actually used
 					}
 				}
 
 
 				if (temp.duration != 0)// if temp is still not completed
 				{
-					//cout << "9";
+
+					//cout << "C" << loopi++ << endl;
 					squeue.addQueue(temp);// requeue
 				}
 			}
@@ -622,6 +649,6 @@ int main(int argc, char** argv)
 
 	}
 
-	system("pause");
+	//system("pause");
 	return 0;
 }
