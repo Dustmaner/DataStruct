@@ -8,7 +8,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <stack>
 #include <queue>
 
@@ -160,8 +160,8 @@ void queueType<Type>::addQueue(const Type& newElement)
 		count++;
 		list[queueRear] = newElement;
 	}
-	else
-		cout << "Cannot add to a full queue." << endl;
+	/*else
+		cout << "Cannot add to a full queue." << endl;*/
 } //end addQueue
 template <class Type>
 void queueType<Type>::deleteQueue()
@@ -173,8 +173,8 @@ void queueType<Type>::deleteQueue()
 													  //mod operator to advance queueFront
 													  //because the array is circular
 	}
-	else
-		cout << "Cannot remove from an empty queue" << endl;
+	/*else
+		cout << "Cannot remove from an empty queue" << endl;*/
 } //end deleteQueue
 template <class Type>
 queueType<Type>::queueType(int queueSize)
@@ -361,7 +361,7 @@ int main(int argc, char** argv)
 	}*/
 	// initialize the variable 'parameter' with the argument 1
 	//string parameter(argv[1]);
-	string parameter("input=gray.txt;size=4;scheduling=roundrobin;quantum=2");
+	string parameter("input=grayy.txt;size=4;scheduling=roundrobin;quantum=2");
 
 
 	// find the position of the semicolon
@@ -386,7 +386,7 @@ int main(int argc, char** argv)
 	// get only the numerical value via substring. (the '+ 1' is to get the substring after the equals sign).
 	string number = poison.substr(5, positioner-5);
 	// next line is for display purposes only.
-	//cout << "number: " << number << endl;
+	//cout << "size: " << number << endl;
 
 	//Scheduling
 	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
@@ -415,7 +415,7 @@ int main(int argc, char** argv)
 	// get only the numerical value via substring. (the '+ 1' is to get the substring after the equals sign).
 	string number4 = poison4.substr(1, positioner4 - 1);
 	// next line is for display purposes only.
-	//cout << "schedule: " << number4 << endl;
+	//cout << "quantum: " << number4 << endl;
 
 
 	ifstream instream(filename);//Obtain Input Stream
@@ -535,6 +535,8 @@ int main(int argc, char** argv)
 			//cout << c2.back() << endl;
 			if (c2.isEmptyQueue() == 0)// arived?
 			{
+			
+				//cout << "nuts\n";
 				while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 				{
 					if (c2.isEmptyQueue() == 0)
@@ -544,6 +546,9 @@ int main(int argc, char** argv)
 					}
 				}
 			}
+			/*else
+				cout << "deez\n";*/
+
 			if (squeue.front().arrival <= linenumber && squeue.isEmptyQueue() == 0)// Arrived: 
 			{
 				temp = squeue.front();
@@ -571,6 +576,7 @@ int main(int argc, char** argv)
 				
 				if (c2.isEmptyQueue() == 0)// arived?
 				{
+					//cout << "nuts\n";
 					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 					{
 						if (c2.isEmptyQueue() == 0)
@@ -580,6 +586,8 @@ int main(int argc, char** argv)
 						}
 					}
 				}
+				/*else
+					cout << "deez\n";*/
 
 				squeue.deleteQueue();// take working element
 				if (relax == 4 && (squeue.isEmptyQueue() == 0 || c2.isEmptyQueue() == 0))// relax output
@@ -593,6 +601,7 @@ int main(int argc, char** argv)
 				}
 				if (c2.isEmptyQueue() == 0)// arived?
 				{
+					//cout << "nuts\n";
 					while (c2.front().arrival <= linenumber && squeue.isFullQueue() == 0 && c2.front().arrival >= 0)// add from big queue to small queue
 					{
 						if (c2.isEmptyQueue() == 0)
@@ -602,6 +611,9 @@ int main(int argc, char** argv)
 						}
 					}
 				}
+				/*else
+					cout << "deez\n";*/
+
 				if (temp.duration != 0)// requeueable?
 				{
 					squeue.addQueue(temp);// requeue
