@@ -1,2 +1,2 @@
 # DataStruct
-Class Projects
+Class Projects for COSC 2410
