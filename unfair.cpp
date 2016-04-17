@@ -21,6 +21,7 @@ struct student
 	double qat = 0;
 	string gender = "";
 	string note = "";
+	double score = 0;
 	//student *link;
 };
 
@@ -44,6 +45,37 @@ bool operator!=(const student& lhs, const student& rhs)
 	else
 		return 1;
 }
+bool operator <(const student& lhs, const student& rhs)
+{
+	if (lhs.score < rhs.score)
+	{
+		//cout << "LUL\n";
+		return 1;/* your comparison code goes here */
+	}
+	else
+		return 0;
+}
+bool operator >(const student& lhs, const student& rhs)
+{
+	if (lhs.score > rhs.score)
+	{
+		//cout << "LUL\n";
+		return 1;/* your comparison code goes here */
+	}
+	else
+		return 0;
+}
+
+/*student operator++(const student& lhs)
+{
+	
+	{
+		//cout << "LUL\n";
+		return lhs;/* your comparison code goes here 
+	}
+
+
+}*/
 
 template <class Type>
 struct nodeType
@@ -504,7 +536,7 @@ public:
 	//Postcondition: Returns true if this iterator is not equal to
 	// the iterator specified by right, otherwise it returns
 	// false.
-private:
+//private:
 	nodeType<Type> *current; //pointer to point to the current
 							 //node in the linked list
 };
@@ -569,6 +601,7 @@ public:
 	//Postcondition: If the list is empty, the program terminates;
 	// otherwise, the first element of the list is returned.
 	Type front() const;
+	void front(double x);//score modifier
 
 	//Function to return the last element of the list.
 	//Precondition: The list must exist and must not be empty.
@@ -661,6 +694,14 @@ void linkedListType<Type>::initializeList()
 {
 	destroyList(); //if the list has any nodes, delete them
 }
+
+ostream& operator<< (ostream& osObject,
+	const student& rectangle)
+{
+	osObject << rectangle.name
+		/*<< "\t" << rectangle.gpa << "\t" << rectangle.qat << "\t" << rectangle.gender << "\t" << rectangle.note << "\t"<< rectangle.score*/ <<  endl;
+	return osObject;
+}
 template <class Type>
 void linkedListType<Type>::print() const
 {
@@ -668,10 +709,13 @@ void linkedListType<Type>::print() const
 	current = first; //set current point to the first node
 	while (current != NULL) //while more data to print
 	{
-		cout << current->info << " ";
+		cout << current->info ;
+		//cout << current->info
 		current = current->link;
 	}
 }//end print
+
+
 template <class Type>
 int linkedListType<Type>::length() const
 {
@@ -682,7 +726,20 @@ Type linkedListType<Type>::front() const
 {
 	assert(first != NULL);
 	return first->info; //return the info of the first node
-}//end front
+}
+template<class Type>
+void linkedListType<Type>::front(double x)
+{
+	assert(first != NULL);
+	first->info.score = x*first->info.gpa + first->info.qat;
+	/*while (first != NULL)
+	{
+		first->info.score = x;
+		first->info = first->link;
+	}*/
+}
+//end front
+
 template <class Type>
 Type linkedListType<Type>::back() const
 {
@@ -950,7 +1007,7 @@ nodeType<Type>* unorderedLinkedList<Type>::mergeList(nodeType<Type>* first1, nod
 		return first1;
 	else
 	{
-		if (first1->info < first2->info) //compare the first nodes
+		if (first1->info > first2->info) //compare the first nodes
 		{
 			newHead = first1;
 			first1 = first1->link;
@@ -964,7 +1021,7 @@ nodeType<Type>* unorderedLinkedList<Type>::mergeList(nodeType<Type>* first1, nod
 		}
 		while (first1 != NULL && first2 != NULL)
 		{
-			if (first1->info < first2->info)
+			if (first1->info > first2->info)
 			{
 				lastSmall->link = first1;
 				lastSmall = lastSmall->link;
@@ -1018,7 +1075,7 @@ int main(int argc, char** argv)
 { 
 	//FILENAME
 	//string parameter(argv[1]);
-	string parameter("input=uhfake.txt;pick=3");
+	string parameter("input=uhfake.txt;pick=6");
 	// find the position of the semicolon
 	string::size_type position = parameter.find(';');
 	// next line is for display purposes only.
@@ -1047,9 +1104,13 @@ int main(int argc, char** argv)
 	student temp;// actor placeholder
 	int elementn = 0;
 	int elementsNB = 0;
+	
+	int multi = 100;
 
 	//GET LIST
-	unorderedLinkedList<student> listo;
+	unorderedLinkedList<student> listm, listf, listo;
+	listm.initializeList();
+	listf.initializeList();
 	listo.initializeList();
 	while (!instream.eof())
 	{
@@ -1088,7 +1149,22 @@ int main(int argc, char** argv)
 					elementn = 0;
 				}
 				elementsNB++;
-				listo.insertLast(temp);
+				temp.score = multi*temp.gpa + temp.qat;
+				if (temp.gender == "male")
+				{
+					listm.insertLast(temp);
+				}
+				if (temp.gender == "female")
+				{
+					listf.insertLast(temp);
+				}
+				if (temp.gender != "female" && temp.gender != "male")
+				{
+					listo.insertLast(temp);
+				}
+				temp.score = multi*temp.gpa + temp.qat;
+				//cout << "Score " << temp.score << "\t" << temp.name << endl;
+				//cout << temp;
 			}
 	}
 	//MERGE SORT
@@ -1097,6 +1173,82 @@ int main(int argc, char** argv)
 	//3-Mergesort Second sublist
 	//4-Merge the first sublist and the second sublist
 
+
+	listf.mergeSort();//  with 100*(GPA) + QAT 
+	listm.mergeSort();
+	listo.mergeSort();
+
+	int itCounter = 0;
+	while (pick != 0)
+	{
+		//temp.score = multi*temp.gpa + temp.qat;
+		//multi*listf.front().gpa + listf.front().qat
+
+		linkedListIterator<student> abc;
+		abc = listf.begin();
+		while (abc != NULL)
+		{
+			//cout  << itCounter++ << "\t" <<abc.current->info;
+			abc.current->info.score = multi*abc.current->info.gpa + abc.current->info.qat;
+			//cout << abc.current->info;
+			abc = abc.current->link;
+		}
+		listf.mergeSort();
+
+		linkedListIterator<student> def;
+		def = listm.begin();
+		while (def != NULL)
+		{
+			//cout  << itCounter++ << "\t" <<abc.current->info;
+			def.current->info.score = multi*def.current->info.gpa + def.current->info.qat;
+			//cout << abc.current->info;
+			def = def.current->link;
+		}
+		listm.mergeSort();
+
+		linkedListIterator<student> jkl;
+		jkl = listo.begin();
+		while (jkl != NULL)
+		{
+			//cout  << itCounter++ << "\t" <<abc.current->info;
+			jkl.current->info.score = multi*jkl.current->info.gpa + jkl.current->info.qat;
+			//cout << abc.current->info;
+			jkl = jkl.current->link;
+		}
+		listo.mergeSort();
+
+		//listf.front(multi);
+		//listf. = lisft->link;
+		//listf.initializeList();
+		//unorderedLinkedList<student> abc = listf.begin();
+
+		//cout << "\n\n";
+		for (int i = 0; i < pick; i++)// cout "pick" number of students from each list (f/m/o)
+		{
+			cout << listf.front();
+			listf.deleteNode(listf.front());
+		}
+		for (int i = 0; i < pick; i++)
+		{
+			cout << listm.front();
+			listm.deleteNode(listm.front());
+		}
+		for (int i = 0; i < pick; i++)
+		{
+			cout << listo.front();
+			listo.deleteNode(listo.front());
+		}
+		pick--;
+		if (multi >= 10)// reduce gpa multiplier each iteration
+		{
+			multi = multi - 10;
+		}
+		itCounter = 0;
+		//cout << "\n\n";// iteration space
+	}
+	/*listm.print();
+	listf.print();
+	listo.print();*/
 
 	system("pause");
 	return 0; 
