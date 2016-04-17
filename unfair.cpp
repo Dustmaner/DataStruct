@@ -16,12 +16,34 @@ using namespace std;
 
 struct student
 {
-	string name;
-	double gpa;
-	double qat;
-	string gender;
-	string note;
+	string name = "";
+	double gpa = 0;
+	double qat = 0;
+	string gender = "";
+	string note = "";
+	//student *link;
 };
+
+bool operator==(const student& lhs, const student& rhs)
+{
+	if (lhs.gpa == rhs.gpa && lhs.qat == rhs.qat)
+	{
+		//cout << "LUL\n";
+		return 1;/* your comparison code goes here */
+	}
+	else 
+		return 0;
+}
+bool operator!=(const student& lhs, const student& rhs)
+{
+	if (lhs.gpa == rhs.gpa && lhs.qat == rhs.qat)
+	{
+		//cout << "LUL\n";
+		return 0;/* your comparison code goes here */
+	}
+	else
+		return 1;
+}
 
 template <class Type>
 struct nodeType
@@ -509,8 +531,7 @@ linkedListIterator<Type> linkedListIterator<Type>::operator++()
 	return *this;
 }
 template <class Type>
-bool linkedListIterator<Type>::operator==
-(const linkedListIterator<Type>& right) const
+bool linkedListIterator<Type>::operator==(const linkedListIterator<Type>& right) const
 {
 	return (current == right.current);
 }
@@ -520,82 +541,83 @@ bool linkedListIterator<Type>::operator!=
 {
 	return (current != right.current);
 }
-
 template <class Type>
 class linkedListType
 {
 public:
+	//Overload the assignment operator.
 	const linkedListType<Type>& operator=
 		(const linkedListType<Type>&);
-	//Overload the assignment operator.
-	void initializeList();
 	//Initialize the list to an empty state.
 	//Postcondition: first = NULL, last = NULL, count = 0;
-	bool isEmptyList() const;
+	void initializeList();
 	//Function to determine whether the list is empty.
 	//Postcondition: Returns true if the list is empty, otherwise
 	// it returns false.
-	void print() const;
+	bool isEmptyList() const;
 	//Function to output the data contained in each node.
 	//Postcondition: none
-	int length() const;
+	void print() const;
 	//Function to return the number of nodes in the list.
 	//Postcondition: The value of count is returned.
-	void destroyList();
+	int length() const;
 	//Function to delete all the nodes from the list.
 	//Postcondition: first = NULL, last = NULL, count = 0;
-	Type front() const;
+	void destroyList();
 	//Function to return the first element of the list.
 	//Precondition: The list must exist and must not be empty.
 	//Postcondition: If the list is empty, the program terminates;
 	// otherwise, the first element of the list is returned.
-	Type back() const;
+	Type front() const;
+
 	//Function to return the last element of the list.
 	//Precondition: The list must exist and must not be empty.
 	//Postcondition: If the list is empty, the program
 	// terminates; otherwise, the last
 	// element of the list is returned.
-	virtual bool search(const Type& searchItem) const = 0;
+	Type back() const;
 	//Function to determine whether searchItem is in the list.
 	//Postcondition: Returns true if searchItem is in the list,
 	// otherwise the value false is returned.
-	virtual void insertFirst(const Type& newItem) = 0;
+	virtual bool search(const Type& searchItem) const = 0;
 	//Function to insert newItem at the beginning of the list.
 	//Postcondition: first points to the new list, newItem is
 	// inserted at the beginning of the list, last points to
 	// the last node in the list, and count is incremented by
 	// 1.
-	virtual void insertLast(const Type& newItem) = 0;
+	virtual void insertFirst(const Type& newItem) = 0;
 	//Function to insert newItem at the end of the list.
 	//Postcondition: first points to the new list, newItem is
 	// inserted at the end of the list, last points to the
 	// last node in the list, and count is incremented by 1.
-	virtual void deleteNode(const Type& deleteItem) = 0;
+	virtual void insertLast(const Type& newItem) = 0;
 	//Function to delete deleteItem from the list.
 	//Postcondition: If found, the node containing deleteItem is
 	// deleted from the list. first points to the first node,
 	// last points to the last node of the updated list, and
 	// count is decremented by 1.
-	linkedListIterator<Type> begin();
+	virtual void deleteNode(const Type& deleteItem) = 0;
 	//Function to return an iterator at the beginning of the
 	//linked list.
 	//Postcondition: Returns an iterator such that current is set
 	// to first.
-	linkedListIterator<Type> end();
+	linkedListIterator<Type> begin();
 	//Function to return an iterator one element past the
 	//last element of the linked list.
 	//Postcondition: Returns an iterator such that current is set
 	// to NULL.
-	linkedListType();
+	linkedListIterator<Type> end();
 	//default constructor
 	//Initializes the list to an empty state.
 	//Postcondition: first = NULL, last = NULL, count = 0;
-	linkedListType(const linkedListType<Type>& otherList);
+	linkedListType();
 	//copy constructor
-	~linkedListType();
+	linkedListType(const linkedListType<Type>& otherList);
 	//destructor
 	//Deletes all the nodes from the list.
 	//Postcondition: The list object is destroyed.
+	~linkedListType();
+	
 protected:
 	int count; //variable to store the number of list elements
 			   //
@@ -680,8 +702,7 @@ linkedListIterator<Type> linkedListType<Type>::end()
 	return temp;
 }
 template <class Type>
-void linkedListType<Type>::copyList
-(const linkedListType<Type>& otherList)
+void linkedListType<Type>::copyList(const linkedListType<Type>& otherList)
 {
 	nodeType<Type> *newNode; //pointer to create a node
 	nodeType<Type> *current; //pointer to traverse the list
@@ -732,8 +753,7 @@ linkedListType<Type>::linkedListType
 	copyList(otherList);
 }//end copy constructor
 template <class Type>
-const linkedListType<Type>& linkedListType<Type>::operator=
-(const linkedListType<Type>& otherList)
+const linkedListType<Type>& linkedListType<Type>::operator=(const linkedListType<Type>& otherList)
 {
 	if (this != &otherList) //avoid self-copy
 	{
@@ -741,35 +761,40 @@ const linkedListType<Type>& linkedListType<Type>::operator=
 	}//end else
 	return *this;
 }
-
+//
+//
+//
+//
+//
 template <class Type>
 class unorderedLinkedList : public linkedListType<Type>
 {
 public:
-	bool search(const Type& searchItem) const;
 	//Function to determine whether searchItem is in the list.
 	//Postcondition: Returns true if searchItem is in the list,
 	// otherwise the value false is returned.
-	void insertFirst(const Type& newItem);
+	bool search(const Type& searchItem) const;
 	//Function to insert newItem at the beginning of the list.
 	//Postcondition: first points to the new list, newItem is
 	// inserted at the beginning of the list, last points to
 	// the last node, and count is incremented by 1.
-	//
-	void insertLast(const Type& newItem);
+	void insertFirst(const Type& newItem);
+	
 	//Function to insert newItem at the end of the list.
 	//Postcondition: first points to the new list, newItem is
 	// inserted at the end of the list, last points to the
 	// last node, and count is incremented by 1.
-	void deleteNode(const Type& deleteItem);
-
+	void insertLast(const Type& newItem);
 	//Function to delete deleteItem from the list.
 	//Postcondition: If found, the node containing deleteItem
 	// is deleted from the list. first points to the first
 	// node, last points to the last node of the updated
 	// list, and count is decremented by 1.
-	void divideList(nodeType<Type>* first1, nodeType<Type>*& first2);
+	void deleteNode(const Type& deleteItem);
+
 	//function to divide list
+	void divideList(nodeType<Type>* first1, nodeType<Type>*& first2);
+	
 	nodeType<Type>* mergeList(nodeType<Type>* first1, nodeType<Type>* first2);
 
 	void recMergeSort(nodeType<Type>* &head);
@@ -989,10 +1014,88 @@ void unorderedLinkedList<Type>::mergeSort()
 	}
 } //end mergeSort
 
-int main() 
+int main(int argc, char** argv)
 { 
+	//FILENAME
+	//string parameter(argv[1]);
+	string parameter("input=uhfake.txt;pick=3");
+	// find the position of the semicolon
+	string::size_type position = parameter.find(';');
+	// next line is for display purposes only.
+	//cout << "position: " << position << endl;
+	// get only the filename via substring. The value of 10 is fixed for hw1 because the parameter always starts with: inputfile=
+	string filename = parameter.substr(6, position - 6);
+	// next line is for display purposes only.
+	//cout << "Filename: " << filename << endl;
 
-	
+	//PICK
+	// find the position of the second equals sign (the second parameter indicates where in the string to start searching).
+	string::size_type position2 = parameter.find('=', position);
+	// next line is for display purposes only.
+	//cout << "position2: " << position2 << endl;
+	string poison = parameter.substr(position + 1);
+	string::size_type positioner = poison.find(';');
+	// get only the numerical value via substring. (the '+ 1' is to get the substring after the equals sign).
+	string pickS = poison.substr(5, positioner - 5);
+	int pick = stoi(pickS);
+	// next line is for display purposes only.
+	//cout << "size: " << number << endl;
+	ifstream instream(filename);//Obtain Input Stream
+	string line;
+	string element;
+
+	student temp;// actor placeholder
+	int elementn = 0;
+	int elementsNB = 0;
+
+	//GET LIST
+	unorderedLinkedList<student> listo;
+	listo.initializeList();
+	while (!instream.eof())
+	{
+		getline(instream, line, '\n');
+		istringstream some(line);
+		if (some.peek() != 35)// Check if it is a comment
+			while (!some.eof()) {// loop for each element
+				{
+					getline(some, element, '\t');
+					//cout << element << endl;
+					temp.name = (element);
+					elementn++;
+				}
+				{
+					getline(some, element, '\t');
+					//cout << element << endl;
+					temp.gpa = stod(element);
+					elementn++;
+				}
+				{
+					getline(some, element, '\t');
+					//cout << element << endl;
+					temp.qat = stod(element);
+					elementn++;
+				}
+				{
+					getline(some, element, '\t');
+					//cout << element << endl;
+					temp.gender = (element);
+					elementn++;
+				}
+				{
+					getline(some, element, '\t');
+					//cout << element << endl;
+					temp.note = (element);
+					elementn = 0;
+				}
+				elementsNB++;
+				listo.insertLast(temp);
+			}
+	}
+	//MERGE SORT
+	//1-Divide
+	//2-Mergesort First sublist
+	//3-Mergesort Second sublist
+	//4-Merge the first sublist and the second sublist
 
 
 	system("pause");
